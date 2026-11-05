@@ -1,3 +1,16 @@
-Making my first change to the repository (Christian)
+# CS 67 Final Project
 
-Successfully pulled and made my own change to repository (Ben)
+A game built in Java by Christian, Ben, and Elliott.
+
+## Team
+
+- Christian
+- Ben Tournier
+- Elliott
+
+## Potential Changes
+
+- Fog
+- Mana / gold ability system
+- Custom board size
+- Random effects every few turns
