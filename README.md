@@ -21,6 +21,6 @@ A game built in Java by Christian, Ben, and Elliott.
 
 ## TODO for next class
 
-1. UI Classes (Christian)
-2. Skeleton classes for game pieces - just list out methods do not need actual functionality (Ben)
-3. Basic UI initializing a grid (Ben)
+1. UI Classes (Ben)
+2. Skeleton classes for game pieces - just list out methods do not need actual functionality (Christian)
+3. Basic UI initializing a grid (Christian)
