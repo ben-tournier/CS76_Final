@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class rook extends piece {
 
+    public rook(int x, int y) {
+        setPosition(x, y);
+    }
+
     // See abstract class for function description.
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
@@ -64,4 +68,6 @@ public class rook extends piece {
 
         return validMovements;
     }
+
+    public rook copyPiece() {return new rook(getX(), getY());}
 }

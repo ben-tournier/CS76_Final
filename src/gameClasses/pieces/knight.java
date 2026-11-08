@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class knight extends piece {
 
+    public knight(int x, int y) {
+        setPosition(x, y);
+    }
+
     // See abstract class for function description.
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
@@ -54,4 +58,6 @@ public class knight extends piece {
 
         return validMovements;
     }
+
+    public knight copyPiece() {return new knight(getX(), getY());}
 }

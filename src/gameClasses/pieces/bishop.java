@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class bishop extends piece {
 
+    public bishop(int x, int y) {
+        setPosition(x, y);
+    }
+
     // See abstract class for function description.
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
@@ -61,4 +65,6 @@ public class bishop extends piece {
 
         return validMovements;
     }
+
+    public bishop copyPiece() {return new bishop(getX(), getY());}
 }

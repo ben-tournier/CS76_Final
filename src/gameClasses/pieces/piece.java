@@ -13,6 +13,9 @@ public abstract class piece {
     // This will not take into consideration if the board state created by moving to a location would be valid.
     public abstract ArrayList<int[]> getVisibleTiles(piece[][] gameBoard);
 
+    // When implemented, this will return a copy of the subclass.
+    public abstract piece copyPiece();
+
     protected  void setX(int newX) {x = newX;}
     protected  void setY(int newY) {y = newY;}
     public void setPosition(int newX, int newY) {setX(newX); setY(newY);}
@@ -32,11 +35,6 @@ public abstract class piece {
         return newArray;
     }
 
-    public boolean pieceIsWhite() {
-        return pieceIsWhite;
-    }
-
-    public void setColor(boolean isWhite) {
-        pieceIsWhite = isWhite;
-    }
+    public boolean pieceIsWhite() {return pieceIsWhite;}
+    public void setColor(boolean isWhite) {pieceIsWhite = isWhite;}
 }

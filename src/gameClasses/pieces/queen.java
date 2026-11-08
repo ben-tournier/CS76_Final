@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class queen extends piece {
 
+    public queen(int x, int y) {
+        setPosition(x, y);
+    }
+
     // See abstract class for function description.
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
@@ -63,4 +67,6 @@ public class queen extends piece {
 
         return validMovements;
     }
+
+    public queen copyPiece() {return new queen(getX(), getY());}
 }
