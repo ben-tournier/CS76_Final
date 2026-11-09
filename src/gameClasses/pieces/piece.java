@@ -18,7 +18,7 @@ public abstract class piece {
 
     protected  void setRow(int newRow) {row=newRow;}
     protected  void setCol(int newCol) {col=newCol;}
-    public void setPosition(int newRow, int newCol) {setRow(newRow); setRow(newCol);}
+    public void setPosition(int newRow, int newCol) {setRow(newRow); setCol(newCol);}
     public void setPosition(int[] position) {setRow(position[0]); setCol(position[1]);}
 
     protected  int getRow() {return row;}

@@ -36,7 +36,7 @@ public class bishop extends piece {
                     int colChecking = col + colDirection * directionScalar - 1;
 
                     // Breaking the loop for this direction if the bishop would move off the board.
-                    if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
+                    if (rowChecking < 0 || rowChecking >= boardRows || colChecking < 0 || colChecking >= boardColumns) {
                         break;
                     }
 

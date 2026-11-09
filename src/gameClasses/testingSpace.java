@@ -5,7 +5,8 @@ import src.gameClasses.pieces.*;
 
 public class testingSpace {
     public static void main() {
-        test1();
+        // testQueen();
+        testKnight();
     }
 
     public static void printTiles(ArrayList<int[]> tilesPrinting) {
@@ -15,18 +16,34 @@ public class testingSpace {
     }
 
     // Tests that the queen sees the correct spaces
-    public static void test1() {
+    public static void testQueen() {
         board gameBoard = new board(8);
-        queen whiteQueen = new queen(1, 1);
+        queen queen = new queen(1, 1);
 
-        gameBoard.placePiece(whiteQueen, 1, 1);
+        gameBoard.placePiece(queen, 1, 1);
 
-        printTiles(whiteQueen.getVisibleTiles(gameBoard.getBoard()));
+        printTiles(queen.getVisibleTiles(gameBoard.getBoard()));
 
         System.out.println();
 
-        gameBoard.movePiece(whiteQueen, 5, 5);
+        gameBoard.movePiece(queen, 5, 5);
 
-        printTiles(whiteQueen.getVisibleTiles(gameBoard.getBoard()));
+        printTiles(queen.getVisibleTiles(gameBoard.getBoard()));
+    }
+
+    // Tests that the knight sees the correct spaces
+    public static void testKnight() {
+        board gameBoard = new board(8);
+        knight knight = new knight(1, 1);
+
+        gameBoard.placePiece(knight, 1, 1);
+
+        printTiles(knight.getVisibleTiles(gameBoard.getBoard()));
+
+        System.out.println();
+
+        gameBoard.movePiece(knight, 5, 5);
+
+        printTiles(knight.getVisibleTiles(gameBoard.getBoard()));
     }
 }

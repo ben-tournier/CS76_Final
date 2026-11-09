@@ -38,7 +38,7 @@ public class knight extends piece {
             int colChecking = col + colMovement - 1;
 
             // Skipping combinations where the knight would move off the board.
-            if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
+            if (rowChecking < 0 || rowChecking >= boardRows || colChecking < 0 || colChecking >= boardColumns) {
                 continue;
             }
 

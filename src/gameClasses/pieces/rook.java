@@ -41,7 +41,7 @@ public class rook extends piece {
                 int colChecking = col + colDirection * directionScalar - 1;
 
                 // Exiting the loop for the current direction if the rook would move off the board.
-                if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
+                if (rowChecking < 0 || rowChecking >= boardRows || colChecking < 0 || colChecking >= boardColumns) {
                     break;
                 }
 

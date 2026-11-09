@@ -37,8 +37,8 @@ public class queen extends piece {
                     int rowChecking = row + rowDirection * directionScalar - 1;
                     int colChecking = col + colDirection * directionScalar - 1;
 
-                    // Skipping combinations where the king would move off the board.
-                    if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
+                    // Skipping combinations where the king would move off the board (the indexes are not valid).
+                    if (rowChecking < 0 || rowChecking >= boardRows || colChecking < 0 || colChecking >= boardColumns) {
                         break;
                     }
 

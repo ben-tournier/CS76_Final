@@ -79,6 +79,6 @@ public class board {
         placePiece(piecePlacing, newRow, newCol);
         piecePlacing.setPosition(newRow, newCol);
 
-        board[pieceRow][pieceCol] = null;
+        board[pieceRow - 1][pieceCol - 1] = null;
     }
 }
