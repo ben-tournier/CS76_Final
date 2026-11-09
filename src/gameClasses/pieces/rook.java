@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class rook extends piece {
     boolean hasMoved = false;
 
-    public rook(int x, int y) {
-        setPosition(x, y);
+    public rook(int row, int col) {
+        setPosition(row, col);
     }
 
     // See abstract class for function description.
@@ -16,8 +16,8 @@ public class rook extends piece {
         int boardRows = gameBoard.length;
         int boardColumns = gameBoard[0].length;
 
-        int xPosition = getX();
-        int yPosition = getY();
+        int row = getRow();
+        int col = getCol();
         
         int[][] directions = new int[4][2];
         directions[0] = createArray(-1, 0);
@@ -27,8 +27,8 @@ public class rook extends piece {
 
         // Iterating through each of the possible directions the rook can move.
         for (int[] direction : directions) {
-            int xDirection = direction[0];
-            int yDirection = direction[1];
+            int rowDirection = direction[0];
+            int colDirection = direction[1];
 
             int directionScalar = 1; // // Represents how far the rook is checking
 
@@ -37,25 +37,25 @@ public class rook extends piece {
             while (true) {
 
                 // The -1 converts the position to an index in the game board.
-                int xChecking = xPosition + xDirection * directionScalar;
-                int yChecking = yPosition + yDirection * directionScalar;
+                int rowChecking = row + rowDirection * directionScalar - 1;
+                int colChecking = col + colDirection * directionScalar - 1;
 
                 // Exiting the loop for the current direction if the rook would move off the board.
-                if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
+                if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
                     break;
                 }
 
-                piece tileChecking = gameBoard[xChecking][yChecking];
+                piece tileChecking = gameBoard[rowChecking][colChecking];
 
                 // If the board tile is empty.
                 if (tileChecking == null) {
-                    int[] movementAdding = createArray(xChecking, yChecking);
+                    int[] movementAdding = createArray(rowChecking, colChecking);
                     validMovements.add(movementAdding);
                 }
 
                 // If the board tile contains an opponent's piece.
                 else if (this.pieceIsWhite != tileChecking.pieceIsWhite) {
-                    int[] movementAdding = createArray(xChecking, yChecking);
+                    int[] movementAdding = createArray(rowChecking, colChecking);
                     validMovements.add(movementAdding);
                     break;
                 }
@@ -72,5 +72,5 @@ public class rook extends piece {
         return validMovements;
     }
 
-    public rook copyPiece() {return new rook(getX(), getY());}
+    public rook copyPiece() {return new rook(getRow(), getCol());}
 }

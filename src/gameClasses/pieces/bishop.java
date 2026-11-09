@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class bishop extends piece {
 
-    public bishop(int x, int y) {
-        setPosition(x, y);
+    public bishop(int row, int col) {
+        setPosition(row, col);
     }
 
     // See abstract class for function description.
@@ -15,15 +15,15 @@ public class bishop extends piece {
         int boardRows = gameBoard.length;
         int boardColumns = gameBoard[0].length;
 
-        int xPosition = getX();
-        int yPosition = getY();
+        int row = getRow();
+        int col = getCol();
 
-        int[] xDirections = createArray(-1, 1);
-        int[] yDirections = createArray(-1, 1);
+        int[] rowDirections = createArray(-1, 1);
+        int[] colDirections = createArray(-1, 1);
 
         // Iterating through each of the possible directions the bishop can use.
-        for (int xDirection : xDirections) {
-            for (int yDirection : yDirections) {
+        for (int rowDirection : rowDirections) {
+            for (int colDirection : colDirections) {
 
                 int directionScalar = 1; // Represents how far the bishop is checking
 
@@ -32,25 +32,25 @@ public class bishop extends piece {
                 while (true) {
 
                     // The -1 converts the position to an index in the game board.
-                    int xChecking = xPosition + xDirection * directionScalar;
-                    int yChecking = yPosition + yDirection * directionScalar;
+                    int rowChecking = row + rowDirection * directionScalar - 1;
+                    int colChecking = col + colDirection * directionScalar - 1;
 
                     // Breaking the loop for this direction if the bishop would move off the board.
-                    if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
+                    if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
                         break;
                     }
 
-                    piece tileChecking = gameBoard[xChecking][yChecking];
+                    piece tileChecking = gameBoard[rowChecking][colChecking];
 
                     // If the board tile is empty.
                     if (tileChecking == null) {
-                        int[] movementAdding = createArray(xChecking, yChecking);
+                        int[] movementAdding = createArray(rowChecking, colChecking);
                         validMovements.add(movementAdding);
                     }
 
                     // If the board tile contains an opponent's piece.
                     else if (this.pieceIsWhite != tileChecking.pieceIsWhite) {
-                        int[] movementAdding = createArray(xChecking, yChecking);
+                        int[] movementAdding = createArray(rowChecking, colChecking);
                         validMovements.add(movementAdding);
                         break;
                     }
@@ -68,5 +68,5 @@ public class bishop extends piece {
         return validMovements;
     }
 
-    public bishop copyPiece() {return new bishop(getX(), getY());}
+    public bishop copyPiece() {return new bishop(getRow(), getCol());}
 }

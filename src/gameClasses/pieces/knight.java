@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class knight extends piece {
 
-    public knight(int x, int y) {
-        setPosition(x, y);
+    public knight(int row, int col) {
+        setPosition(row, col);
     }
 
     // See abstract class for function description.
@@ -15,8 +15,8 @@ public class knight extends piece {
         int boardRows = gameBoard.length;
         int boardColumns = gameBoard[0].length;
 
-        int xPosition = getX();
-        int yPosition = getY();
+        int row = getRow();
+        int col = getCol();
 
         int[][] movements = new int[8][2];
         movements[0] = createArray(-2, -1);
@@ -30,29 +30,29 @@ public class knight extends piece {
 
         // Iterating through each of the possible movements a knight can make.
         for (int[] movement : movements) {
-            int xMovement = movement[0];
-            int yMovement = movement[1];
+            int rowMovement = movement[0];
+            int colMovement = movement[1];
 
             // The -1 converts the position to an index in the game board.
-            int xChecking = xPosition + xMovement - 1;
-            int yChecking = yPosition + yMovement - 1;
+            int rowChecking = row + rowMovement - 1;
+            int colChecking = col + colMovement - 1;
 
             // Skipping combinations where the knight would move off the board.
-            if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
+            if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
                 continue;
             }
 
-            piece tileChecking = gameBoard[xChecking][yChecking];
+            piece tileChecking = gameBoard[rowChecking][colChecking];
 
             // If the board tile is empty.
             if (tileChecking == null) {
-                int[] movementAdding = createArray(xChecking, yChecking);
+                int[] movementAdding = createArray(rowChecking, colChecking);
                 validMovements.add(movementAdding);
             }
 
             // If the board tile contains an opponent's piece.
             else if (this.pieceIsWhite != tileChecking.pieceIsWhite) {
-                int[] movementAdding = createArray(xChecking, yChecking);
+                int[] movementAdding = createArray(rowChecking, colChecking);
                 validMovements.add(movementAdding);
             }
         }
@@ -60,5 +60,5 @@ public class knight extends piece {
         return validMovements;
     }
 
-    public knight copyPiece() {return new knight(getX(), getY());}
+    public knight copyPiece() {return new knight(getRow(), getCol());}
 }

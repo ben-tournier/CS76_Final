@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class queen extends piece {
 
-    public queen(int x, int y) {
-        setPosition(x, y);
+    public queen(int row, int col) {
+        setPosition(row, col);
     }
 
     // See abstract class for function description.
@@ -15,15 +15,15 @@ public class queen extends piece {
         int boardRows = gameBoard.length;
         int boardColumns = gameBoard[0].length;
 
-        int xPosition = getX();
-        int yPosition = getY();
+        int row = getRow();
+        int col = getCol();
 
         // Iterating through each of the possible directions the queen can move.
-        for (int xDirection=-1; xDirection<=1; xDirection++) {
-            for (int yDirection=-1; yDirection<=1; yDirection++) {
+        for (int rowDirection=-1; rowDirection<=1; rowDirection++) {
+            for (int colDirection=-1; colDirection<=1; colDirection++) {
 
                 // Skipping the combination representing the queen not moving.
-                if (xDirection == 0 && yDirection == 0) {
+                if (rowDirection == 0 && colDirection == 0) {
                     continue;
                 }
 
@@ -34,25 +34,25 @@ public class queen extends piece {
                 while (true) {
 
                     // The -1 converts the position to an index in the game board.
-                    int xChecking = xPosition + xDirection * directionScalar;
-                    int yChecking = yPosition + yDirection * directionScalar;
+                    int rowChecking = row + rowDirection * directionScalar - 1;
+                    int colChecking = col + colDirection * directionScalar - 1;
 
                     // Skipping combinations where the king would move off the board.
-                    if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
+                    if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
                         break;
                     }
 
-                    piece tileChecking = gameBoard[xChecking][yChecking];
+                    piece tileChecking = gameBoard[rowChecking][colChecking];
 
                     // If the board tile is empty.
                     if (tileChecking == null) {
-                        int[] movementAdding = createArray(xChecking, yChecking);
+                        int[] movementAdding = createArray(rowChecking, colChecking);
                         validMovements.add(movementAdding);
                     }
 
                     // If the board tile contains an opponent's piece.
                     else if (this.pieceIsWhite != tileChecking.pieceIsWhite) {
-                        int[] movementAdding = createArray(xChecking, yChecking);
+                        int[] movementAdding = createArray(rowChecking, colChecking);
                         validMovements.add(movementAdding);
                         break;
                     }
@@ -70,5 +70,5 @@ public class queen extends piece {
         return validMovements;
     }
 
-    public queen copyPiece() {return new queen(getX(), getY());}
+    public queen copyPiece() {return new queen(getRow(), getCol());}
 }

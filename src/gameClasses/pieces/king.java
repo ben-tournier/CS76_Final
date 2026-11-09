@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class king extends piece {
 
-    public king(int x, int y) {
-        setPosition(x, y);
+    public king(int row, int col) {
+        setPosition(row, col);
     }
 
     // See abstract class for function description.
@@ -15,38 +15,38 @@ public class king extends piece {
         int boardRows = gameBoard.length;
         int boardColumns = gameBoard[0].length;
 
-        int xPosition = getX();
-        int yPosition = getY();
+        int row = getRow();
+        int col = getCol();
 
         // Iterating through each of the possible movements a king can make.
-        for (int xMovement=-1; xMovement<=1; xMovement++) {
-            for (int yMovement=-1; yMovement<=1; yMovement++) {
+        for (int rowMovement=-1; rowMovement<=1; rowMovement++) {
+            for (int colMovement=-1; colMovement<=1; colMovement++) {
 
                 // Skipping the combination representing the king not moving.
-                if (xMovement == 0 && yMovement == 0) {
+                if (rowMovement == 0 && colMovement == 0) {
                     continue;
                 }
 
                 // The -1 converts the position to an index in the game board.
-                int xChecking = xPosition + xMovement - 1;
-                int yChecking = yPosition + yMovement - 1;
+                int rowChecking = row + rowMovement - 1;
+                int colChecking = col + colMovement - 1;
 
                 // Skipping combinations where the king would move off the board.
-                if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
+                if (rowChecking < 0 || rowChecking >= boardColumns || colChecking < 0 || colChecking >= boardRows) {
                     continue;
                 }
 
-                piece tileChecking = gameBoard[xChecking][yChecking];
+                piece tileChecking = gameBoard[rowChecking][colChecking];
 
                 // If the board tile is empty.
                 if (tileChecking == null) {
-                    int[] movementAdding = createArray(xChecking, yChecking);
+                    int[] movementAdding = createArray(rowChecking, colChecking);
                     validMovements.add(movementAdding);
                 }
 
                 // If the board tile contains an opponent's piece.
                 else if (this.pieceIsWhite != tileChecking.pieceIsWhite) {
-                    int[] movementAdding = createArray(xChecking, yChecking);
+                    int[] movementAdding = createArray(rowChecking, colChecking);
                     validMovements.add(movementAdding);
                 }
             }
@@ -55,5 +55,5 @@ public class king extends piece {
         return validMovements;
     }
 
-    public king copyPiece() {return new king(getX(), getY());}
+    public king copyPiece() {return new king(getRow(), getCol());}
 }

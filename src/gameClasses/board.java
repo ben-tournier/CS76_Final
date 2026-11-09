@@ -67,7 +67,18 @@ public class board {
 
     // This function places the passed piece at the given positions.
     // To place at the correct spot we must convert the position to an index.
-    public void placePiece(piece piecePlacing, int xPosition, int yPosition) {
-        board[xPosition-1][yPosition-1] = piecePlacing;
+    public void placePiece(piece piecePlacing, int newRow, int newCol) {
+        board[newRow - 1][newCol - 1] = piecePlacing;
+    }
+
+    public void movePiece(piece piecePlacing, int newRow, int newCol) {
+        int[] piecePosition = piecePlacing.getPosition();
+        int pieceRow = piecePosition[0];
+        int pieceCol = piecePosition[1];
+
+        placePiece(piecePlacing, newRow, newCol);
+        piecePlacing.setPosition(newRow, newCol);
+
+        board[pieceRow][pieceCol] = null;
     }
 }

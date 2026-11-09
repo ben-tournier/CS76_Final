@@ -15,8 +15,8 @@ public class pawn extends piece{
     private boolean canDoubleMove = true;
     private boolean isEnPassantValid = false;
 
-    public pawn(int x, int y) {
-        setPosition(x, y);
+    public pawn(int row, int col) {
+        setPosition(row, col);
     }
 
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
@@ -28,7 +28,7 @@ public class pawn extends piece{
     }
 
     public pawn copyPiece() {
-        pawn copiedPawn = new pawn(getX(), getY());
+        pawn copiedPawn = new pawn(getRow(), getCol());
 
         copiedPawn.canDoubleMove = this.canDoubleMove();
 
