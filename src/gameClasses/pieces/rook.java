@@ -3,6 +3,7 @@ package src.gameClasses.pieces;
 import java.util.ArrayList;
 
 public class rook extends piece {
+    boolean hasMoved = false;
 
     public rook(int x, int y) {
         setPosition(x, y);
@@ -34,6 +35,8 @@ public class rook extends piece {
             // Indefinitely iterating through the next tiles in the direction.
             // The stopping conditions are running out of board space or hitting another game piece.
             while (true) {
+
+                // The -1 converts the position to an index in the game board.
                 int xChecking = xPosition + xDirection * directionScalar;
                 int yChecking = yPosition + yDirection * directionScalar;
 

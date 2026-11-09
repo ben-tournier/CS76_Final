@@ -30,11 +30,13 @@ public class bishop extends piece {
                 // Indefinitely iterating through the tiles in the direction.
                 // The stopping conditions are running out of board space or hitting another game piece.
                 while (true) {
+
+                    // The -1 converts the position to an index in the game board.
                     int xChecking = xPosition + xDirection * directionScalar;
                     int yChecking = yPosition + yDirection * directionScalar;
 
                     // Breaking the loop for this direction if the bishop would move off the board.
-                    if (xChecking < 1 || xChecking > boardColumns || yChecking < 1 || yChecking > boardRows) {
+                    if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
                         break;
                     }
 

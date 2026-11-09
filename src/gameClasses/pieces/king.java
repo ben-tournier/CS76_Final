@@ -27,11 +27,12 @@ public class king extends piece {
                     continue;
                 }
 
-                int xChecking = xPosition + xMovement;
-                int yChecking = yPosition + yMovement;
+                // The -1 converts the position to an index in the game board.
+                int xChecking = xPosition + xMovement - 1;
+                int yChecking = yPosition + yMovement - 1;
 
                 // Skipping combinations where the king would move off the board.
-                if (xChecking < 1 || xChecking > boardColumns || yChecking < 1 || yChecking > boardRows) {
+                if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
                     continue;
                 }
 

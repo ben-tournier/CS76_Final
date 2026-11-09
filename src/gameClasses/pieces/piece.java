@@ -19,6 +19,7 @@ public abstract class piece {
     protected  void setX(int newX) {x = newX;}
     protected  void setY(int newY) {y = newY;}
     public void setPosition(int newX, int newY) {setX(newX); setY(newY);}
+    public void setPosition(int[] position) {setX(position[0]); setY(position[1]);}
 
     protected  int getX() {return x;}
     protected  int getY() {return y;}

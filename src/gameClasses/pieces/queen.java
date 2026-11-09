@@ -32,11 +32,13 @@ public class queen extends piece {
                 // Indefinitely iterating through the next tiles in the direction.
                 // The stopping conditions are running out of board space or hitting another game piece.
                 while (true) {
+
+                    // The -1 converts the position to an index in the game board.
                     int xChecking = xPosition + xDirection * directionScalar;
                     int yChecking = yPosition + yDirection * directionScalar;
 
                     // Skipping combinations where the king would move off the board.
-                    if (xChecking < 1 || xChecking > boardColumns || yChecking < 1 || yChecking > boardRows) {
+                    if (xChecking < 0 || xChecking >= boardColumns || yChecking < 0 || yChecking >= boardRows) {
                         break;
                     }
 
