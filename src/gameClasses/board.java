@@ -6,7 +6,7 @@ public class board {
     piece[][] board;
     int boardSize;
 
-    public void main(int size){
+    public board(int size){
         boardSize = size;
         board = new piece[boardSize][boardSize];
     }
@@ -22,7 +22,7 @@ public class board {
 
     // Returns a copy of the board containing copies of the pieces.
     // Will be used for testing a state's validity without losing the original state.
-    public piece[][] getBoard() {
+    public piece[][] copyBoard() {
         piece[][] boardCopy = new piece[boardSize][boardSize];
 
         for (int rowIndex=0; rowIndex<boardSize; rowIndex++) {
@@ -32,6 +32,10 @@ public class board {
         }
 
         return boardCopy;
+    }
+
+    public piece[][] getBoard() {
+        return board;
     }
 
     // Takes a board state and sets this object's board to it
@@ -59,5 +63,11 @@ public class board {
         //                  return false
         //
         return true;
+    }
+
+    // This function places the passed piece at the given positions.
+    // To place at the correct spot we must convert the position to an index.
+    public void placePiece(piece piecePlacing, int xPosition, int yPosition) {
+        board[xPosition-1][yPosition-1] = piecePlacing;
     }
 }
