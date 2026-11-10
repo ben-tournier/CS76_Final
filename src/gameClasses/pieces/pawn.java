@@ -10,6 +10,7 @@ import java.util.ArrayList;
 //          If the pawn moves, set canDoubleMove to false
 //          If the pawn moves 2, set isEnPassantValid to true
 //          When an opponent moves, set isEnPassantValid to false
+//          Ensure there is a separate function to differentiate the tiles a pawn can see vs tiles the pawn can attack.
 
 public class pawn extends piece{
     private boolean canDoubleMove = true;

@@ -8,6 +8,10 @@ public class bishop extends piece {
         setPosition(row, col);
     }
 
+    public bishop(boolean isWhite, int row, int col) {
+        setPosition(row, col);
+    }
+    
     // See abstract class for function description.
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
@@ -31,16 +35,15 @@ public class bishop extends piece {
                 // The stopping conditions are running out of board space or hitting another game piece.
                 while (true) {
 
-                    // The -1 converts the position to an index in the game board.
-                    int rowChecking = row + rowDirection * directionScalar - 1;
-                    int colChecking = col + colDirection * directionScalar - 1;
+                    int rowChecking = row + rowDirection * directionScalar;
+                    int colChecking = col + colDirection * directionScalar;
 
                     // Breaking the loop for this direction if the bishop would move off the board.
-                    if (rowChecking < 0 || rowChecking >= boardRows || colChecking < 0 || colChecking >= boardColumns) {
+                    if (rowChecking < 1 || rowChecking > boardRows || colChecking < 1 || colChecking > boardColumns) {
                         break;
                     }
 
-                    piece tileChecking = gameBoard[rowChecking][colChecking];
+                    piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
 
                     // If the board tile is empty.
                     if (tileChecking == null) {
@@ -68,5 +71,5 @@ public class bishop extends piece {
         return validMovements;
     }
 
-    public bishop copyPiece() {return new bishop(getRow(), getCol());}
+    public bishop copyPiece() {return new bishop(pieceIsWhite(), getRow(), getCol());}
 }

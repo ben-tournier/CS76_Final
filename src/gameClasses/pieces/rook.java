@@ -9,6 +9,11 @@ public class rook extends piece {
         setPosition(row, col);
     }
 
+    public rook(boolean isWhite, int row, int col) {
+        setColor(isWhite);
+        setPosition(row, col);
+    }
+
     // See abstract class for function description.
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
@@ -36,16 +41,15 @@ public class rook extends piece {
             // The stopping conditions are running out of board space or hitting another game piece.
             while (true) {
 
-                // The -1 converts the position to an index in the game board.
-                int rowChecking = row + rowDirection * directionScalar - 1;
-                int colChecking = col + colDirection * directionScalar - 1;
+                int rowChecking = row + rowDirection * directionScalar;
+                int colChecking = col + colDirection * directionScalar;
 
                 // Exiting the loop for the current direction if the rook would move off the board.
-                if (rowChecking < 0 || rowChecking >= boardRows || colChecking < 0 || colChecking >= boardColumns) {
+                if (rowChecking < 1 || rowChecking > boardRows || colChecking < 1 || colChecking > boardColumns) {
                     break;
                 }
 
-                piece tileChecking = gameBoard[rowChecking][colChecking];
+                piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
 
                 // If the board tile is empty.
                 if (tileChecking == null) {
@@ -72,5 +76,5 @@ public class rook extends piece {
         return validMovements;
     }
 
-    public rook copyPiece() {return new rook(getRow(), getCol());}
+    public rook copyPiece() {return new rook(pieceIsWhite(), getRow(), getCol());}
 }

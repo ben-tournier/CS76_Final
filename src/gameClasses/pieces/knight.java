@@ -8,6 +8,11 @@ public class knight extends piece {
         setPosition(row, col);
     }
 
+    public knight(boolean isWhite, int row, int col) {
+        setColor(isWhite);
+        setPosition(row, col);
+    }
+    
     // See abstract class for function description.
     public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
@@ -33,16 +38,15 @@ public class knight extends piece {
             int rowMovement = movement[0];
             int colMovement = movement[1];
 
-            // The -1 converts the position to an index in the game board.
-            int rowChecking = row + rowMovement - 1;
-            int colChecking = col + colMovement - 1;
+            int rowChecking = row + rowMovement;
+            int colChecking = col + colMovement;
 
             // Skipping combinations where the knight would move off the board.
-            if (rowChecking < 0 || rowChecking >= boardRows || colChecking < 0 || colChecking >= boardColumns) {
+            if (rowChecking < 1 || rowChecking > boardRows || colChecking < 1 || colChecking > boardColumns) {
                 continue;
             }
 
-            piece tileChecking = gameBoard[rowChecking][colChecking];
+            piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
 
             // If the board tile is empty.
             if (tileChecking == null) {
@@ -60,5 +64,5 @@ public class knight extends piece {
         return validMovements;
     }
 
-    public knight copyPiece() {return new knight(getRow(), getCol());}
+    public knight copyPiece() {return new knight(pieceIsWhite(), getRow(), getCol());}
 }
