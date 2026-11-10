@@ -1,0 +1,98 @@
+package ui;
+
+import java.awt.GridLayout;
+
+import javax.swing.JPanel;
+
+/**
+ * The 8x8 grid of squares. Receives clicks and updates the display.
+ * <p>
+ * This class does NOT decide whether moves are legal; that belongs to the
+ * game logic.
+ */
+public class BoardPanel extends JPanel {
+
+    /** Number of rows and columns on the board. */
+    public static final int SIZE = 8;
+
+    private final SquareButton[][] squares = new SquareButton[SIZE][SIZE];
+    private final StatusPanel statusPanel;
+    private SquareButton selected; // null when nothing is selected
+
+    /**
+     * Builds the grid of squares and places the starting pieces.
+     *
+     * @param statusPanel the status bar to send messages to when squares are clicked
+     */
+    public BoardPanel(StatusPanel statusPanel) {
+        this.statusPanel = statusPanel;
+        setLayout(new GridLayout(SIZE, SIZE));
+
+        // Row 0 is the top of the screen (Black's side).
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                SquareButton square = new SquareButton(row, col);
+                square.addActionListener(e -> handleSquareClick(square));
+                squares[row][col] = square;
+                add(square);
+            }
+        }
+
+        setUpStartingPieces();
+    }
+
+    /**
+     * Places the standard starting position on the board.
+     * <p>
+     * Placeholder: draws pieces as Unicode text until the Piece classes exist.
+     */
+    private void setUpStartingPieces() {
+        String[] blackBack = {"♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"};
+        String[] whiteBack = {"♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"};
+
+        for (int col = 0; col < SIZE; col++) {
+            squares[0][col].setPieceSymbol(blackBack[col]); // Black back rank
+            squares[1][col].setPieceSymbol("♟");            // Black pawns
+            squares[6][col].setPieceSymbol("♙");            // White pawns
+            squares[7][col].setPieceSymbol(whiteBack[col]); // White back rank
+        }
+    }
+
+    /**
+     * Handles a click on a square.
+     * <p>
+     * For now: click a square to select it, click it again to deselect, or
+     * click a different square to move the selection there.
+     * Later: a second click on a different square should attempt a move.
+     *
+     * @param square the square that was clicked
+     */
+    private void handleSquareClick(SquareButton square) {
+        // Clicking the already-selected square clears the selection.
+        if (selected == square) {
+            selected.setSelected(false);
+            selected = null;
+            statusPanel.showMessage("Selection cleared");
+            return;
+        }
+
+        // Otherwise, un-highlight the old square (if any) and select the new one.
+        if (selected != null) {
+            selected.setSelected(false);
+        }
+        selected = square;
+        selected.setSelected(true);
+        statusPanel.showMessage("Selected " + square.getSquareName());
+    }
+
+    /**
+     * Returns the square at the given position.
+     *
+     * @param row the row, where 0 is the top of the screen (Black's side)
+     * @param col the column, where 0 is the left side (the a-file)
+     * @return the square at that row and column
+     */
+    public SquareButton getSquare(int row, int col) {
+        return squares[row][col];
+    }
+}
