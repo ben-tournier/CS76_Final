@@ -5,7 +5,7 @@ A game built in Java by Christian, Ben, and Elliott.
 ## Team
 
 - Christian
-- Ben Tournier
+- Ben 
 - Elliott
 
 ## Potential Changes
