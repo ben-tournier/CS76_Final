@@ -34,7 +34,7 @@ public class player {
             }
         }
 
-        // There should always be a king, so throw a runtime exception if not.
+        // There should always be a king if you are looking for one, so throw a runtime exception if not.
         throw new RuntimeException(this.toString() + " has no king");
     }
 

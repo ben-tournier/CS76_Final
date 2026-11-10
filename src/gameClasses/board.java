@@ -159,6 +159,11 @@ public class board {
         boardState[pieceRow - 1][pieceCol - 1] = null;
     }
 
+    // Overloads the function above to accept an array instead of two integers.
+    public void movePiece(player defendingPlayer, piece piecePlacing, int[] newPosition) {
+        movePiece(defendingPlayer, piecePlacing, newPosition[0], newPosition[1]);
+    }
+
     // Places a piece on the board and assigns it to the given player.
     public void spawnPiece(piece pieceSpawning, player owner, int rowPlacing, int colPlacing) {
         owner.addPiece(pieceSpawning);
