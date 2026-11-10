@@ -21,9 +21,9 @@ A game built in Java by Christian, Ben, and Elliott.
 
 ## TODO for next class
 
-1. UI Classes (Ben)
-2. Skeleton classes for game pieces - just list out methods do not need actual functionality (Christian)
-3. Basic UI initializing a grid (Christian)
+1. Connecting UI and frame (Christian)
+2. Start Menu  (Ben)
+3. Import Chess piece images (Ben)
 
 # Things that need implemented (Christian notes)
 
