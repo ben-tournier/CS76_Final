@@ -28,12 +28,13 @@ public class BoardPanel extends JPanel {
         this.statusPanel = statusPanel;
         setLayout(new GridLayout(SIZE, SIZE));
 
-        // Row 0 is the top of the screen (Black's side).
-        for (int row = 0; row < SIZE; row++) {
-            for (int col = 0; col < SIZE; col++) {
+        // Positions are 1-based to match the game classes: row 1 is White's
+        // back rank. GridLayout fills top-to-bottom, so add row 8 first.
+        for (int row = SIZE; row >= 1; row--) {
+            for (int col = 1; col <= SIZE; col++) {
                 SquareButton square = new SquareButton(row, col);
                 square.addActionListener(e -> handleSquareClick(square));
-                squares[row][col] = square;
+                squares[row - 1][col - 1] = square; // convert position to index
                 add(square);
             }
         }
@@ -50,11 +51,11 @@ public class BoardPanel extends JPanel {
         String[] blackBack = {"♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"};
         String[] whiteBack = {"♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"};
 
-        for (int col = 0; col < SIZE; col++) {
-            squares[0][col].setPieceSymbol(blackBack[col]); // Black back rank
-            squares[1][col].setPieceSymbol("♟");            // Black pawns
-            squares[6][col].setPieceSymbol("♙");            // White pawns
-            squares[7][col].setPieceSymbol(whiteBack[col]); // White back rank
+        for (int col = 1; col <= SIZE; col++) {
+            getSquare(8, col).setPieceSymbol(blackBack[col - 1]); // Black back rank
+            getSquare(7, col).setPieceSymbol("♟");                // Black pawns
+            getSquare(2, col).setPieceSymbol("♙");                // White pawns
+            getSquare(1, col).setPieceSymbol(whiteBack[col - 1]); // White back rank
         }
     }
 
@@ -87,12 +88,23 @@ public class BoardPanel extends JPanel {
 
     /**
      * Returns the square at the given position.
+     * Uses the same 1-based positions as the game classes.
      *
-     * @param row the row, where 0 is the top of the screen (Black's side)
-     * @param col the column, where 0 is the left side (the a-file)
+     * @param row the row, 1 to 8, where 1 is White's back rank
+     * @param col the column, 1 to 8, where 1 is the left side (the a-file)
      * @return the square at that row and column
      */
     public SquareButton getSquare(int row, int col) {
-        return squares[row][col];
+        return squares[row - 1][col - 1];
+    }
+
+    /**
+     * Overloads the function above to accept an array, e.g. from piece.getPosition().
+     *
+     * @param position the position as {row, col}
+     * @return the square at that position
+     */
+    public SquareButton getSquare(int[] position) {
+        return getSquare(position[0], position[1]);
     }
 }

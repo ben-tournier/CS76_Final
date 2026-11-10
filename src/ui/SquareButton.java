@@ -22,15 +22,17 @@ public class SquareButton extends JButton {
     /**
      * Creates an empty square at the given position.
      *
-     * @param row the row, where 0 is the top of the screen (Black's side)
-     * @param col the column, where 0 is the left side (the a-file)
+     * Uses the same 1-based positions as the game classes.
+     *
+     * @param row the row, 1 to 8, where 1 is White's back rank (bottom of the screen)
+     * @param col the column, 1 to 8, where 1 is the left side (the a-file)
      */
     public SquareButton(int row, int col) {
         this.row = row;
         this.col = col;
 
-        // Squares alternate colors: light when row + col is even.
-        baseColor = (row + col) % 2 == 0 ? LIGHT : DARK;
+        // Squares alternate colors: a1 (row 1, col 1) is dark, so dark when row + col is even.
+        baseColor = (row + col) % 2 == 0 ? DARK : LIGHT;
 
         setPreferredSize(new Dimension(70, 70));
         setFont(new Font("Segoe UI Symbol", Font.PLAIN, 40)); // font with chess glyphs on Windows
@@ -69,25 +71,32 @@ public class SquareButton extends JButton {
 
     /**
      * Converts this square's row/col to chess notation,
-     * e.g. row 7, col 0 -> "a1".
+     * e.g. row 1, col 1 -> "a1".
      *
      * @return the square's name in chess notation
      */
     public String getSquareName() {
-        char file = (char) ('a' + col);  // column 0 is the a-file
-        int rank = BoardPanel.SIZE - row; // row 0 is rank 8
+        char file = (char) ('a' + col - 1); // column 1 is the a-file
+        int rank = row;                     // row number is the rank
         return "" + file + rank;
     }
 
     /**
-     * @return this square's row, where 0 is the top of the screen
+     * @return this square's row, 1 to 8, where 1 is White's back rank
      */
     public int getRow() {
         return row;
     }
 
     /**
-     * @return this square's column, where 0 is the left side
+     * @return this square's position as {row, col}, matching piece.getPosition()
+     */
+    public int[] getPosition() {
+        return new int[] {row, col};
+    }
+
+    /**
+     * @return this square's column, 1 to 8, where 1 is the left side
      */
     public int getCol() {
         return col;
