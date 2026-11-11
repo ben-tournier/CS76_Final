@@ -9,8 +9,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import gameClasses.testingSpace;
-
 public abstract class piece {
     protected boolean pieceIsWhite;
 
