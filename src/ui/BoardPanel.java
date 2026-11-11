@@ -4,6 +4,8 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
+import gameClasses.pieces.*;
+
 /**
  * The 8x8 grid of squares. Receives clicks and updates the display.
  * <p>
@@ -20,7 +22,7 @@ public class BoardPanel extends JPanel {
     private SquareButton selected; // null when nothing is selected
 
     /**
-     * Builds the grid of squares and places the starting pieces.
+     * Builds the grid of squares.
      *
      * @param statusPanel the status bar to send messages to when squares are clicked
      */
@@ -38,24 +40,30 @@ public class BoardPanel extends JPanel {
                 add(square);
             }
         }
-
-        setUpStartingPieces();
     }
 
     /**
-     * Places the standard starting position on the board.
+     * Places the passed board state on the board.
      * <p>
-     * Placeholder: draws pieces as Unicode text until the Piece classes exist.
      */
-    private void setUpStartingPieces() {
-        String[] blackBack = {"♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"};
-        String[] whiteBack = {"♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"};
+    public void setUpStartingPieces(piece[][] boardState) {
+        
+        int numRows = boardState.length;
+        int numCols = boardState[0].length;
 
-        for (int col = 1; col <= SIZE; col++) {
-            getSquare(8, col).setPieceSymbol(blackBack[col - 1]); // Black back rank
-            getSquare(7, col).setPieceSymbol("♟");                // Black pawns
-            getSquare(2, col).setPieceSymbol("♙");                // White pawns
-            getSquare(1, col).setPieceSymbol(whiteBack[col - 1]); // White back rank
+        for (int row=0; row<numRows; row++) {
+            for (int col=0; col<numCols; col++) {
+                piece currentPiece = boardState[row][col];
+                SquareButton currentTile = squares[row][col];
+
+                if (currentPiece == null) {
+                    continue;
+                }
+
+                int cellSize = Math.max(1, Math.min(currentTile.getWidth(), currentTile.getHeight()));
+                
+                currentTile.setIcon(currentPiece.getPieceIcon(cellSize));
+            }
         }
     }
 
@@ -80,6 +88,8 @@ public class BoardPanel extends JPanel {
         // Otherwise, un-highlight the old square (if any) and select the new one.
         if (selected != null) {
             selected.setSelected(false);
+
+
         }
         selected = square;
         selected.setSelected(true);

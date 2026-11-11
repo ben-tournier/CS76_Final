@@ -1,6 +1,6 @@
-package src.gameClasses;
+package gameClasses;
 
-import src.gameClasses.pieces.piece;
+import gameClasses.pieces.piece;
 import java.util.ArrayList;
 
 public class board {
@@ -131,7 +131,7 @@ public class board {
         return false;
     }
 
-    // Places the passed piece at the given positions.
+    // Places the passed piece at the given position.
     // To place at the correct spot we must convert the position to an index.
     public void placePiece(piece piecePlacing, int newRow, int newCol) {
         boardState[newRow - 1][newCol - 1] = piecePlacing;

@@ -1,7 +1,7 @@
-package src.gameClasses;
+package gameClasses;
 
 import java.util.ArrayList;
-import src.gameClasses.pieces.*;
+import gameClasses.pieces.*;
 
 public class testingSpace {
     public static void main() {

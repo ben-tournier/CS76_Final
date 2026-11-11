@@ -1,6 +1,15 @@
-package src.gameClasses.pieces;
+package gameClasses.pieces;
 
 import java.util.ArrayList;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import gameClasses.testingSpace;
 
 public abstract class piece {
     protected boolean pieceIsWhite;
@@ -38,4 +47,23 @@ public abstract class piece {
 
     public boolean pieceIsWhite() {return pieceIsWhite;}
     public void setColor(boolean isWhite) {pieceIsWhite = isWhite;}
+
+    // public abstract BufferedImage getPieceImage();
+
+    public BufferedImage getPieceImage() {
+        try {
+            return ImageIO.read(new File("testingImage.png"));
+        } catch (IOException e) {
+            System.err.println("Could not load image.png: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public ImageIcon getPieceIcon(int imageSize) {
+        BufferedImage pieceImage = getPieceImage();
+
+        ImageIcon pieceIcon = new ImageIcon(pieceImage.getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH));
+
+        return pieceIcon;
+    };
 }

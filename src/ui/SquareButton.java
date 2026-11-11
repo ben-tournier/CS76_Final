@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 /**
@@ -47,8 +48,8 @@ public class SquareButton extends JButton {
      *
      * @param symbol the Unicode chess symbol to display, e.g. "♔"
      */
-    public void setPieceSymbol(String symbol) {
-        setText(symbol);
+    public void setPieceSymbol(ImageIcon image) {
+        setIcon(image);
     }
 
     /**
