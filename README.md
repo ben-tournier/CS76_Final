@@ -21,9 +21,9 @@ A game built in Java by Christian, Ben, and Elliott.
 
 ## TODO for next class
 
-1. Connecting UI and frame (Christian)
-2. Start Menu  (Ben)
-3. Import Chess piece images (Ben)
+1. Handle Pawn and Castling mechanisms (Christian)
+2. Implement Turns System (Ben)
+3. Look Into Varying of modes and building out from base game (Elliott)
 
 # Things that need implemented (Christian notes)
 
