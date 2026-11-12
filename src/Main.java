@@ -1,13 +1,24 @@
 import javax.swing.SwingUtilities;
 
 import ui.ChessFrame;
+import ui.StartMenuFrame;
 import gameClasses.*;
 import gameClasses.pieces.*;
 
 // Entry point: starts the program.
 public class Main {
-    
+
     public static void main(String[] args) {
+        // Swing UI should be created on the Event Dispatch Thread.
+        // The start menu shows first; clicking "Play Classic" calls startClassicGame().
+        SwingUtilities.invokeLater(() -> {
+            StartMenuFrame menu = new StartMenuFrame(Main::startClassicGame);
+            menu.setVisible(true);
+        });
+    }
+
+    // Sets up the board and players, then opens the chess board window.
+    private static void startClassicGame() {
         board gameBoard = new board(8);
         player player1 = new player(true);
         player player2 = new player(false);
@@ -26,19 +37,11 @@ public class Main {
         gameBoard.spawnPiece(enemyKnight, player1, enemyKnight.getPosition());
         gameBoard.spawnPiece(friendlyBishop, player2, friendlyBishop.getPosition());
         gameBoard.spawnPiece(friendlyKing, player2, friendlyKing.getPosition());
-        
+
         ChessFrame frame = new ChessFrame();
-
-        // Swing UI should be created on the Event Dispatch Thread.
-        SwingUtilities.invokeLater(() -> {
-            frame.setVisible(true);
-            frame.loadState(gameBoard.getBoardState());
-        });
-
+        frame.setVisible(true);
+        frame.loadState(gameBoard.getBoardState());
         frame.getBoardPanel().connectBoard(gameBoard);
         frame.getBoardPanel().setPlayers(player1, player2);
-
-
-
     }
 }
