@@ -29,3 +29,5 @@ A game built in Java by Christian, Ben, and Elliott.
 
 1. Pawns need to be actually implemented
 2. The king and rook need to be modified to accurately account for castling.
+
+Elliott test
