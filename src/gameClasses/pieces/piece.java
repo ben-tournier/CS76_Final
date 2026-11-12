@@ -46,16 +46,7 @@ public abstract class piece {
     public boolean pieceIsWhite() {return pieceIsWhite;}
     public void setColor(boolean isWhite) {pieceIsWhite = isWhite;}
 
-    // public abstract BufferedImage getPieceImage();
-
-    public BufferedImage getPieceImage() {
-        try {
-            return ImageIO.read(new File("testingImage.png"));
-        } catch (IOException e) {
-            System.err.println("Could not load image.png: " + e.getMessage());
-            return null;
-        }
-    }
+    public abstract BufferedImage getPieceImage();
 
     public ImageIcon getPieceIcon(int imageSize) {
         BufferedImage pieceImage = getPieceImage();

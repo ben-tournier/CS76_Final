@@ -2,6 +2,12 @@ package gameClasses.pieces;
 
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class knight extends piece {
 
     public knight(int row, int col) {
@@ -65,4 +71,22 @@ public class knight extends piece {
     }
 
     public knight copyPiece() {return new knight(pieceIsWhite(), getRow(), getCol());}
+
+    public BufferedImage getPieceImage() {
+
+        String imagePath;
+
+        if (this.pieceIsWhite() == true) {imagePath = "src/gameClasses/gamePieceImages/KnightWhite.png";}
+        else {imagePath = "src/gameClasses/gamePieceImages/KnightBlack.png";}
+
+        try {
+            return ImageIO.read(new File(imagePath));
+        }
+        
+        catch (IOException exception) {
+            System.err.println("Could not load image.png: " + exception.getMessage());
+            return null;
+        }
+    
+    }
 }

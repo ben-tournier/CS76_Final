@@ -2,6 +2,12 @@ package gameClasses.pieces;
 
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class rook extends piece {
     boolean hasMoved = false;
 
@@ -77,4 +83,22 @@ public class rook extends piece {
     }
 
     public rook copyPiece() {return new rook(pieceIsWhite(), getRow(), getCol());}
+
+    public BufferedImage getPieceImage() {
+
+        String imagePath;
+
+        if (this.pieceIsWhite() == true) {imagePath = "src/gameClasses/gamePieceImages/RookWhite.png";}
+        else {imagePath = "src/gameClasses/gamePieceImages/RookBlack.png";}
+
+        try {
+            return ImageIO.read(new File(imagePath));
+        }
+        
+        catch (IOException exception) {
+            System.err.println("Could not load image.png: " + exception.getMessage());
+            return null;
+        }
+    
+    }
 }
