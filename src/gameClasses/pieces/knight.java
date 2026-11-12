@@ -32,12 +32,12 @@ public class knight extends piece {
         int[][] movements = new int[8][2];
         movements[0] = createArray(-2, -1);
         movements[1] = createArray(-1, -2);
-        movements[2] = createArray(1, 2);
-        movements[3] = createArray(2, 1);
-        movements[4] = createArray(2, -1);
-        movements[5] = createArray(1, -2);
-        movements[6] = createArray(-1, -2);
-        movements[7] = createArray(-2, -1);
+        movements[2] = createArray(1, -2);
+        movements[3] = createArray(2, -1);
+        movements[4] = createArray(2, 1);
+        movements[5] = createArray(1, 2);
+        movements[6] = createArray(-1, 2);
+        movements[7] = createArray(-2, 1);
 
         // Iterating through each of the possible movements a knight can make.
         for (int[] movement : movements) {

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 /**
@@ -41,15 +40,6 @@ public class SquareButton extends JButton {
         setBorderPainted(false); // no button border, so squares sit flush
         setOpaque(true);         // needed for the background color to show
         setBackground(baseColor);
-    }
-
-    /**
-     * Shows a piece on this square.
-     *
-     * @param symbol the Unicode chess symbol to display, e.g. "♔"
-     */
-    public void setPieceSymbol(ImageIcon image) {
-        setIcon(image);
     }
 
     /**

@@ -1,10 +1,13 @@
 package ui;
 
+import java.util.ArrayList;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import gameClasses.pieces.*;
+import gameClasses.pieces.piece;
+import gameClasses.board;
+import gameClasses.player;
 
 /**
  * The 8x8 grid of squares. Receives clicks and updates the display.
@@ -20,6 +23,10 @@ public class BoardPanel extends JPanel {
     private final SquareButton[][] squares = new SquareButton[SIZE][SIZE];
     private final StatusPanel statusPanel;
     private SquareButton selected; // null when nothing is selected
+    private board connectedBoard;
+    private ArrayList<int[]> moveableTiles = new ArrayList<int[]>(); // Tiles the player can click to move the selected piece to.
+    private player attackingPlayer;
+    private player defendingPlayer;
 
     /**
      * Builds the grid of squares.
@@ -82,15 +89,73 @@ public class BoardPanel extends JPanel {
             selected.setSelected(false);
             selected = null;
             statusPanel.showMessage("Selection cleared");
+            moveableTiles.clear();
             return;
         }
 
-        // Otherwise, un-highlight the old square (if any) and select the new one.
-        if (selected != null) {
-            selected.setSelected(false);
+        // This chunk here determines if the player is moving a piece.
+        // We use this instead of movableTiles.contains() as it will fail due to the arrays having different address positions.
+        int[] squarePosition = square.getPosition();
+        boolean movingPiece = false;
 
-
+        for (int[] position : moveableTiles) {
+            if (position[0] == squarePosition[0] && position[1] == squarePosition[1]) {
+                movingPiece = true;
+            }
         }
+
+        // If a piece has been selected AND the square selected is one it can move to
+        if (movingPiece) {
+            piece pieceMoving = connectedBoard.getPiece(selected.getPosition());
+            int[] newPosition = square.getPosition();
+
+            connectedBoard.movePiece(defendingPlayer, pieceMoving, newPosition);
+            moveableTiles.clear();
+
+            square.setIcon(selected.getIcon());
+            selected.setIcon(null);
+
+            selected.setSelected(false);
+            selected = null;
+            statusPanel.showMessage("Moved to " + square.getSquareName());
+
+            return;
+        }
+        
+        // If the user selected an empty square
+        if (connectedBoard.getPiece(square.getPosition()) == null) {
+            if (selected == null) {return;}
+
+            moveableTiles.clear();
+
+            selected.setSelected(false);
+            selected = null;
+            statusPanel.showMessage("Selected an empty square");
+            return;
+        }
+
+        // If the player selected a piece they control
+        if (connectedBoard.getPiece(square.getPosition()).pieceIsWhite() == attackingPlayer.controlsWhite()) {
+
+            moveableTiles.clear();
+
+            if (selected != null) {
+                selected.setSelected(false);
+            }
+
+            selected = square;
+            square.setSelected(true);
+
+            piece selectedPiece = connectedBoard.getPiece(selected.getPosition());
+            moveableTiles = selectedPiece.getVisibleTiles(getConnectedGameState());
+
+            for (int[] position : moveableTiles) {
+                System.out.println(position[0] + ", " + position[1]);
+            }
+
+            return;
+        }
+
         selected = square;
         selected.setSelected(true);
         statusPanel.showMessage("Selected " + square.getSquareName());
@@ -116,5 +181,18 @@ public class BoardPanel extends JPanel {
      */
     public SquareButton getSquare(int[] position) {
         return getSquare(position[0], position[1]);
+    }
+
+    public void connectBoard(board gameBoard) {
+        connectedBoard = gameBoard;
+    }
+
+    public piece[][] getConnectedGameState() {
+        return connectedBoard.getBoardState();
+    }
+
+    public void setPlayers(player newAttackingPlayer, player newDefendingPlayer) {
+        attackingPlayer = newAttackingPlayer;
+        defendingPlayer = newDefendingPlayer;
     }
 }
