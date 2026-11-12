@@ -1,8 +1,8 @@
-package src.gameClasses;
+package gameClasses;
 
 import java.util.ArrayList;
-import src.gameClasses.pieces.piece;
-import src.gameClasses.pieces.king;
+import gameClasses.pieces.piece;
+import gameClasses.pieces.king;
 
 public class player {
     private boolean controlsWhite;

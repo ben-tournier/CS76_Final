@@ -1,6 +1,12 @@
-package src.gameClasses.pieces;
+package gameClasses.pieces;
 
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 //  To Do:
 //      Implement getVisibleTiles
@@ -34,5 +40,23 @@ public class pawn extends piece{
         copiedPawn.canDoubleMove = this.canDoubleMove();
 
         return copiedPawn;
+    }
+
+    public BufferedImage getPieceImage() {
+
+        String imagePath;
+
+        if (this.pieceIsWhite() == true) {imagePath = "src/gameClasses/gamePieceImages/PawnWhite.png";}
+        else {imagePath = "src/gameClasses/gamePieceImages/PawnBlack.png";}
+
+        try {
+            return ImageIO.read(new File(imagePath));
+        }
+        
+        catch (IOException exception) {
+            System.err.println("Could not load image.png: " + exception.getMessage());
+            return null;
+        }
+    
     }
 }

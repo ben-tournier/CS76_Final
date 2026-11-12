@@ -1,6 +1,11 @@
-package src.gameClasses.pieces;
+package gameClasses.pieces;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
 
 public class king extends piece {
 
@@ -60,4 +65,22 @@ public class king extends piece {
     }
 
     public king copyPiece() {return new king(pieceIsWhite(), getRow(), getCol());}
+
+    public BufferedImage getPieceImage() {
+
+        String imagePath;
+
+        if (this.pieceIsWhite() == true) {imagePath = "src/gameClasses/gamePieceImages/KingWhite.png";}
+        else {imagePath = "src/gameClasses/gamePieceImages/KingBlack.png";}
+
+        try {
+            return ImageIO.read(new File(imagePath));
+        }
+        
+        catch (IOException exception) {
+            System.err.println("Could not load image.png: " + exception.getMessage());
+            return null;
+        }
+    
+    }
 }

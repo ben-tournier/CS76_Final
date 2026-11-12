@@ -1,6 +1,12 @@
-package src.gameClasses.pieces;
+package gameClasses.pieces;
 
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class knight extends piece {
 
@@ -26,12 +32,12 @@ public class knight extends piece {
         int[][] movements = new int[8][2];
         movements[0] = createArray(-2, -1);
         movements[1] = createArray(-1, -2);
-        movements[2] = createArray(1, 2);
-        movements[3] = createArray(2, 1);
-        movements[4] = createArray(2, -1);
-        movements[5] = createArray(1, -2);
-        movements[6] = createArray(-1, -2);
-        movements[7] = createArray(-2, -1);
+        movements[2] = createArray(1, -2);
+        movements[3] = createArray(2, -1);
+        movements[4] = createArray(2, 1);
+        movements[5] = createArray(1, 2);
+        movements[6] = createArray(-1, 2);
+        movements[7] = createArray(-2, 1);
 
         // Iterating through each of the possible movements a knight can make.
         for (int[] movement : movements) {
@@ -65,4 +71,22 @@ public class knight extends piece {
     }
 
     public knight copyPiece() {return new knight(pieceIsWhite(), getRow(), getCol());}
+
+    public BufferedImage getPieceImage() {
+
+        String imagePath;
+
+        if (this.pieceIsWhite() == true) {imagePath = "src/gameClasses/gamePieceImages/KnightWhite.png";}
+        else {imagePath = "src/gameClasses/gamePieceImages/KnightBlack.png";}
+
+        try {
+            return ImageIO.read(new File(imagePath));
+        }
+        
+        catch (IOException exception) {
+            System.err.println("Could not load image.png: " + exception.getMessage());
+            return null;
+        }
+    
+    }
 }

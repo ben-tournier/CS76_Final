@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import gameClasses.pieces.*;;
+
 /**
  * The main window. Holds the board in the center and the status bar
  * along the bottom.
@@ -45,5 +47,9 @@ public class ChessFrame extends JFrame {
      */
     public StatusPanel getStatusPanel() {
         return statusPanel;
+    }
+
+    public void loadState(piece[][] boardState) {
+        boardPanel.setUpStartingPieces(boardState);
     }
 }

@@ -1,6 +1,6 @@
-package src.gameClasses;
+package gameClasses;
 
-import src.gameClasses.pieces.piece;
+import gameClasses.pieces.piece;
 import java.util.ArrayList;
 
 public class board {
@@ -131,7 +131,7 @@ public class board {
         return false;
     }
 
-    // Places the passed piece at the given positions.
+    // Places the passed piece at the given position.
     // To place at the correct spot we must convert the position to an index.
     public void placePiece(piece piecePlacing, int newRow, int newCol) {
         boardState[newRow - 1][newCol - 1] = piecePlacing;
@@ -150,7 +150,7 @@ public class board {
         int pieceCol = piecePosition[1];
 
         if (defendingPlayer.getPieces().contains(boardState[pieceRow - 1][pieceCol - 1])) {
-            defendingPlayer.getPieces().remove(boardState[pieceRow][pieceCol]);
+            defendingPlayer.getPieces().remove(boardState[pieceRow - 1][pieceCol - 1]);
         }
 
         placePiece(piecePlacing, newRow, newCol);
@@ -175,5 +175,15 @@ public class board {
     // Overloads the function above to accept an array instead of two integers.
     public void spawnPiece(piece pieceSpawning, player owner, int[] positionPlacing) {
         spawnPiece(pieceSpawning, owner, positionPlacing[0], positionPlacing[1]);
+    }
+
+    // Returns the piece at the given position
+    public piece getPiece(int rowAccessing, int colAccessing) {
+        return boardState[rowAccessing - 1][colAccessing - 1];
+    }
+
+    // Overloads the function above to accept an array
+    public piece getPiece(int[] positionAccessing) {
+        return getPiece(positionAccessing[0], positionAccessing[1]);
     }
 }

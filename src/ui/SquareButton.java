@@ -43,15 +43,6 @@ public class SquareButton extends JButton {
     }
 
     /**
-     * Shows a piece on this square.
-     *
-     * @param symbol the Unicode chess symbol to display, e.g. "♔"
-     */
-    public void setPieceSymbol(String symbol) {
-        setText(symbol);
-    }
-
-    /**
      * Removes any piece shown on this square.
      */
     public void clearPiece() {

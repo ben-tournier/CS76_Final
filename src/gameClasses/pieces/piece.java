@@ -1,6 +1,10 @@
-package src.gameClasses.pieces;
+package gameClasses.pieces;
 
 import java.util.ArrayList;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
 
 public abstract class piece {
     protected boolean pieceIsWhite;
@@ -38,4 +42,14 @@ public abstract class piece {
 
     public boolean pieceIsWhite() {return pieceIsWhite;}
     public void setColor(boolean isWhite) {pieceIsWhite = isWhite;}
+
+    public abstract BufferedImage getPieceImage();
+
+    public ImageIcon getPieceIcon(int imageSize) {
+        BufferedImage pieceImage = getPieceImage();
+
+        ImageIcon pieceIcon = new ImageIcon(pieceImage.getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH));
+
+        return pieceIcon;
+    };
 }
