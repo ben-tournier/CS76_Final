@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import gameClasses.board;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,11 +23,12 @@ public class rook extends piece {
     }
 
     // See abstract class for function description.
-    public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
+    public ArrayList<int[]> getVisibleTiles(board gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
 
-        int boardRows = gameBoard.length;
-        int boardColumns = gameBoard[0].length;
+        piece[][] gameState = gameBoard.getBoardState();
+        int boardRows = gameState.length;
+        int boardColumns = gameState[0].length;
 
         int row = getRow();
         int col = getCol();
@@ -55,7 +58,7 @@ public class rook extends piece {
                     break;
                 }
 
-                piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
+                piece tileChecking = gameBoard.getPiece(rowChecking, colChecking);
 
                 // If the board tile is empty.
                 if (tileChecking == null) {
@@ -84,6 +87,7 @@ public class rook extends piece {
 
     public rook copyPiece() {return new rook(pieceIsWhite(), getRow(), getCol());}
 
+    // See abstract class for description.
     public BufferedImage getPieceImage() {
 
         String imagePath;

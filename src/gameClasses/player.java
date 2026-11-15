@@ -40,4 +40,25 @@ public class player {
 
     // Returns a copy of the player (does not copy pieces)
     public player copyPlayer() {return new player(controlsWhite());}
+
+    // Returns a boolean representing if the player has a that can see the tile at the passed position.
+    // Returns true if the player does have a piece that can see the tile, false otherwise.
+    public boolean canSeeTile(board gameBoard, int rowChecking, int colChecking) {
+        for (piece piece : playerPieces) {
+            ArrayList<int[]> visibleTiles = piece.getVisibleTiles(gameBoard);
+
+            for (int[] position : visibleTiles) {
+                if (position[0] == rowChecking && position[1] == colChecking) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    // Overloads the function above to take an array.
+    public boolean canSeeTile(board gamBoard, int[] positionChecking) {
+        return canSeeTile(gamBoard, positionChecking[0], positionChecking[1]);
+    }
 }

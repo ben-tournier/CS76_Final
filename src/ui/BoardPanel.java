@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 
 import gameClasses.pieces.piece;
+import gameClasses.pieces.king;
+import gameClasses.pieces.pawn;
 import gameClasses.board;
 import gameClasses.player;
 
@@ -27,6 +29,7 @@ public class BoardPanel extends JPanel {
     private ArrayList<int[]> moveableTiles = new ArrayList<int[]>(); // Tiles the player can click to move the selected piece to.
     private player attackingPlayer;
     private player defendingPlayer;
+    private pawn lastMovedPiece;
 
     /**
      * Builds the grid of squares.
@@ -107,17 +110,86 @@ public class BoardPanel extends JPanel {
         // If a piece has been selected AND the square selected is one it can move to
         if (movingPiece) {
             piece pieceMoving = connectedBoard.getPiece(selected.getPosition());
+            int[] oldPosition = selected.getPosition();
             int[] newPosition = square.getPosition();
+            int newRow = newPosition[0];
+            int newCol = newPosition[1];
+
+            boolean movingToEmpty = true;
+
+            if (connectedBoard.getPiece(newPosition) != null) {movingToEmpty = false;}
 
             connectedBoard.movePiece(defendingPlayer, pieceMoving, newPosition);
             moveableTiles.clear();
 
+            // Updating icons for the moving piece
             square.setIcon(selected.getIcon());
             selected.setIcon(null);
 
             selected.setSelected(false);
             selected = null;
             statusPanel.showMessage("Moved to " + square.getSquareName());
+
+            if (pieceMoving instanceof king) {
+
+                int movementDistance = Math.abs(oldPosition[1] - newPosition[1]);
+
+                // If the king is castling
+                if (movementDistance > 1) {
+                    
+                    piece otherPieceMoving;
+                    int rookOldCol;
+                    int rookNewCol;
+
+                    // If the king's position after castling is closer to the right side of the board
+                    if ((connectedBoard.getBoardSize() - newCol) < (newCol - 1)) {
+                        rookOldCol = connectedBoard.getBoardSize();
+                        rookNewCol = newCol - 1;
+                    }
+
+                    // If the king's position after castling is closer to the left side of the board
+                    else {
+                        rookOldCol = 1;
+                        rookNewCol = newCol + 1;
+                    }
+
+                    otherPieceMoving = connectedBoard.getPiece(newRow, rookOldCol);
+
+                    connectedBoard.movePiece(defendingPlayer, otherPieceMoving, newRow, rookNewCol);
+
+                    // Updating icons for the rook
+                    squares[newRow-1][rookNewCol-1].setIcon(squares[newRow-1][rookOldCol-1].getIcon());
+                    squares[newRow-1][rookOldCol-1].setIcon(null);
+
+                    statusPanel.showMessage("Castled to " + square.getSquareName());
+
+                    return;
+                } 
+            }
+
+            else if (pieceMoving instanceof pawn) {
+                pawn pawnMoving = (pawn) pieceMoving;
+                if (Math.abs(oldPosition[0] - newPosition[0]) == 2) {
+                    pawnMoving.setAllowEnPassant(true);
+
+                }
+
+                // If the pawn is moving diagonally, but to an empty square
+                else if (Math.abs(newPosition[1] - oldPosition[1]) == 1 && movingToEmpty == true) {
+                    int pawnDirectionIndicator;
+
+                    if (pawnMoving.pieceIsWhite() == true) {pawnDirectionIndicator = 1;}
+                    else {pawnDirectionIndicator = -1;}
+
+                    squares[(newRow + 1 * pawnDirectionIndicator * -1) - 1][newCol - 1].setIcon(null);
+                    connectedBoard.getBoardState()[newRow + 1 * pawnDirectionIndicator * -1][newCol - 1] = null;
+                }
+            }
+
+            if (lastMovedPiece instanceof pawn) {
+                pawn lastMovedPawn = (pawn) lastMovedPiece;
+                lastMovedPawn.setAllowEnPassant(false);
+            }
 
             return;
         }
@@ -147,11 +219,13 @@ public class BoardPanel extends JPanel {
             square.setSelected(true);
 
             piece selectedPiece = connectedBoard.getPiece(selected.getPosition());
-            moveableTiles = selectedPiece.getVisibleTiles(getConnectedGameState());
+            moveableTiles = selectedPiece.getVisibleTiles(connectedBoard);
 
-            for (int[] position : moveableTiles) {
-                System.out.println(position[0] + ", " + position[1]);
+            for (int[] tile : moveableTiles) {
+                System.out.println(tile[0] + ", " + tile[1]);
             }
+
+            statusPanel.showMessage("Selected " + square.getSquareName());
 
             return;
         }

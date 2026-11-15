@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
+import gameClasses.board;
 
 public class queen extends piece {
 
@@ -19,11 +20,12 @@ public class queen extends piece {
     }
     
     // See abstract class for function description.
-    public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
+    public ArrayList<int[]> getVisibleTiles(board gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
 
-        int boardRows = gameBoard.length;
-        int boardColumns = gameBoard[0].length;
+        piece[][] gameState = gameBoard.getBoardState();
+        int boardRows = gameState.length;
+        int boardColumns = gameState[0].length;
 
         int row = getRow();
         int col = getCol();
@@ -51,7 +53,7 @@ public class queen extends piece {
                         break;
                     }
 
-                    piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
+                    piece tileChecking = gameBoard.getPiece(rowChecking, colChecking);
 
                     // If the board tile is empty.
                     if (tileChecking == null) {
@@ -81,6 +83,7 @@ public class queen extends piece {
 
     public queen copyPiece() {return new queen(pieceIsWhite(), getRow(), getCol());}
 
+    // See abstract class for description.
     public BufferedImage getPieceImage() {
 
         String imagePath;
