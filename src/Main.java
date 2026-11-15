@@ -1,6 +1,6 @@
 import javax.swing.SwingUtilities;
 
-import ui.ChessFrame;
+import ui.GameLauncher;
 import ui.StartMenuFrame;
 import gameClasses.*;
 import gameClasses.pieces.*;
@@ -38,10 +38,7 @@ public class Main {
         gameBoard.spawnPiece(friendlyBishop, player2, friendlyBishop.getPosition());
         gameBoard.spawnPiece(friendlyKing, player2, friendlyKing.getPosition());
 
-        ChessFrame frame = new ChessFrame();
-        frame.setVisible(true);
-        frame.loadState(gameBoard.getBoardState());
-        frame.getBoardPanel().connectBoard(gameBoard);
-        frame.getBoardPanel().setPlayers(player1, player2);
+        // Asks for Two Player or vs Computer and opens the board windows.
+        GameLauncher.startGame(gameBoard, player1, player2);
     }
 }
