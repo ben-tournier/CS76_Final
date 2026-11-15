@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import gameClasses.board;
+
 public class knight extends piece {
 
     public knight(int row, int col) {
@@ -20,11 +22,12 @@ public class knight extends piece {
     }
     
     // See abstract class for function description.
-    public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
+    public ArrayList<int[]> getVisibleTiles(board gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
 
-        int boardRows = gameBoard.length;
-        int boardColumns = gameBoard[0].length;
+        piece[][] gameState = gameBoard.getBoardState();
+        int boardRows = gameState.length;
+        int boardColumns = gameState[0].length;
 
         int row = getRow();
         int col = getCol();
@@ -52,7 +55,7 @@ public class knight extends piece {
                 continue;
             }
 
-            piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
+            piece tileChecking = gameBoard.getPiece(rowChecking, colChecking);
 
             // If the board tile is empty.
             if (tileChecking == null) {
@@ -72,6 +75,7 @@ public class knight extends piece {
 
     public knight copyPiece() {return new knight(pieceIsWhite(), getRow(), getCol());}
 
+    // See abstract class for description.
     public BufferedImage getPieceImage() {
 
         String imagePath;

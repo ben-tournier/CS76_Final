@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
+import gameClasses.board;
+
 public class bishop extends piece {
 
     public bishop(int row, int col) {
@@ -18,11 +20,12 @@ public class bishop extends piece {
     }
     
     // See abstract class for function description.
-    public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
+    public ArrayList<int[]> getVisibleTiles(board gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
 
-        int boardRows = gameBoard.length;
-        int boardColumns = gameBoard[0].length;
+        piece[][] gameState = gameBoard.getBoardState();
+        int boardRows = gameState.length;
+        int boardColumns = gameState[0].length;
 
         int row = getRow();
         int col = getCol();
@@ -48,7 +51,7 @@ public class bishop extends piece {
                         break;
                     }
 
-                    piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
+                    piece tileChecking = gameBoard.getPiece(rowChecking, colChecking);
 
                     // If the board tile is empty.
                     if (tileChecking == null) {
@@ -78,6 +81,7 @@ public class bishop extends piece {
 
     public bishop copyPiece() {return new bishop(pieceIsWhite(), getRow(), getCol());}
 
+    // See abstract class for description.
     public BufferedImage getPieceImage() {
 
         String imagePath;

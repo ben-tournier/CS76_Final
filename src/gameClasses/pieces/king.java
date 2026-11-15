@@ -7,7 +7,11 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
+import gameClasses.board;
+import gameClasses.player;
+
 public class king extends piece {
+    private player opponent;
 
     public king(int row, int col) {
         setPosition(row, col);
@@ -19,11 +23,12 @@ public class king extends piece {
     }
     
     // See abstract class for function description.
-    public ArrayList<int[]> getVisibleTiles(piece[][] gameBoard) {
+    public ArrayList<int[]> getVisibleTiles(board gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
 
-        int boardRows = gameBoard.length;
-        int boardColumns = gameBoard[0].length;
+        piece[][] gameState = gameBoard.getBoardState();
+        int boardRows = gameState.length;
+        int boardColumns = gameState[0].length;
 
         int row = getRow();
         int col = getCol();
@@ -45,7 +50,7 @@ public class king extends piece {
                     continue;
                 }
 
-                piece tileChecking = gameBoard[rowChecking - 1][colChecking - 1];
+                piece tileChecking = gameBoard.getPiece(rowChecking, colChecking);
 
                 // If the board tile is empty.
                 if (tileChecking == null) {
@@ -61,11 +66,65 @@ public class king extends piece {
             }
         }
 
+        if (this.hasMoved() == false) {
+            int kingRow = getRow();
+            int kingCol = getCol();
+
+            for (int colChecking = kingCol - 1; colChecking >= 1; colChecking--) {
+                piece pieceChecking = gameBoard.getPiece(kingRow, colChecking);
+
+                // Breaks if you would be castling through check or into check
+                if (getOpponent().canSeeTile(gameBoard, kingRow, colChecking) == true) {
+                    if (kingCol - colChecking <= 2) {
+                        break;
+                    }
+                }
+
+                // If the tile is empty and cannot be seen by the opponent
+                else if (pieceChecking == null) {continue;}
+
+                // If the tile is not empty and is not the corner
+                else if (colChecking != 1) {break;}
+
+                // If the tile is the corner and contains a valid piece to castle with
+                else {
+                    if (pieceChecking.hasMoved() == false) {
+                        validMovements.add(createArray(kingRow, kingCol-2));
+                    }
+                }
+            }
+
+            for (int colChecking = kingCol + 1; colChecking <= boardColumns; colChecking++) {
+                piece pieceChecking = gameBoard.getPiece(kingRow, colChecking);
+
+                // Breaks if you would be castling through check or into check
+                if (getOpponent().canSeeTile(gameBoard, kingRow, colChecking) == true) {
+                    if (colChecking - kingCol <= 2) {
+                        break;
+                    }
+                }
+
+                // If the tile is empty and cannot be seen by the opponent
+                else if (pieceChecking == null) {continue;}
+
+                // If the tile is empty and cannot be seen by the opponent
+                else if (colChecking != boardColumns) {break;}
+
+                // If the tile is the corner and contains a valid piece to castle with
+                else {
+                    if (pieceChecking.hasMoved() == false) {
+                        validMovements.add(createArray(kingRow, kingCol+2));
+                    }
+                }
+            }
+        }
+
         return validMovements;
     }
 
     public king copyPiece() {return new king(pieceIsWhite(), getRow(), getCol());}
 
+    // See abstract class for description.
     public BufferedImage getPieceImage() {
 
         String imagePath;
@@ -81,6 +140,8 @@ public class king extends piece {
             System.err.println("Could not load image.png: " + exception.getMessage());
             return null;
         }
-    
     }
+
+    public void connectOpponent(player opponent) {this.opponent=opponent;}
+    public player getOpponent() {return this.opponent;}
 }

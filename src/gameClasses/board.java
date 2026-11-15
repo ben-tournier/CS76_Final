@@ -68,7 +68,7 @@ public class board {
             int pieceRow = piecePosition[0];
             int pieceCol = piecePosition[1];
 
-            ArrayList<int[]> possibleMoves = piece.getVisibleTiles(boardState);
+            ArrayList<int[]> possibleMoves = piece.getVisibleTiles(this);
 
             // Iterating through the tiles the piece can see.
             for (int[] move : possibleMoves) {
@@ -115,7 +115,7 @@ public class board {
         for (piece attackingPiece : attackingPlayer.getPieces()) {
 
             // Get the squares that the attacking piece can see.
-            ArrayList<int[]> squaresAttacking = attackingPiece.getVisibleTiles(boardState);
+            ArrayList<int[]> squaresAttacking = attackingPiece.getVisibleTiles(this);
 
             // iterate through each of the squares the attacking piece can see
             for (int[] squareAttacking : squaresAttacking) {
@@ -155,6 +155,7 @@ public class board {
 
         placePiece(piecePlacing, newRow, newCol);
         piecePlacing.setPosition(newRow, newCol);
+        piecePlacing.moved();
 
         boardState[pieceRow - 1][pieceCol - 1] = null;
     }
@@ -186,4 +187,6 @@ public class board {
     public piece getPiece(int[] positionAccessing) {
         return getPiece(positionAccessing[0], positionAccessing[1]);
     }
+
+    public int getBoardSize() {return boardSize;}
 }

@@ -28,13 +28,13 @@ public class testingSpace {
 
         gameBoard.spawnPiece(queen, player1, 1, 1);
 
-        printTiles(queen.getVisibleTiles(gameBoard.getBoardState()));
+        printTiles(queen.getVisibleTiles(gameBoard));
 
         System.out.println();
 
         gameBoard.movePiece(player2, queen, 5, 5);
 
-        printTiles(queen.getVisibleTiles(gameBoard.getBoardState()));
+        printTiles(queen.getVisibleTiles(gameBoard));
     }
 
     // Tests that the knight sees the correct spaces
@@ -47,13 +47,13 @@ public class testingSpace {
 
         gameBoard.spawnPiece(knight, player1, 1, 1);
 
-        printTiles(knight.getVisibleTiles(gameBoard.getBoardState()));
+        printTiles(knight.getVisibleTiles(gameBoard));
 
         System.out.println();
 
         gameBoard.movePiece(player2, knight, 5, 5);
 
-        printTiles(knight.getVisibleTiles(gameBoard.getBoardState()));
+        printTiles(knight.getVisibleTiles(gameBoard));
     }
 
     // Tests that it is possible to correctly see when a piece is in check
