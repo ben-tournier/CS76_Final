@@ -45,7 +45,6 @@ public class computerOpponent {
     // Returns null if there are no moves.
     public int[][] chooseMove() {
         board gameBoard = currentGame.getBoard();
-        piece[][] boardState = gameBoard.getBoardState();
 
         ArrayList<int[][]> allMoves = new ArrayList<int[][]>();
         ArrayList<int[][]> captureMoves = new ArrayList<int[][]>();
@@ -60,7 +59,7 @@ public class computerOpponent {
             }
 
             // Iterating through the tiles the piece can see.
-            for (int[] endingPosition : pieceChecking.getVisibleTiles(boardState)) {
+            for (int[] endingPosition : pieceChecking.getVisibleTiles(gameBoard)) {
                 int[][] move = new int[2][];
                 move[0] = startingPosition;
                 move[1] = endingPosition;

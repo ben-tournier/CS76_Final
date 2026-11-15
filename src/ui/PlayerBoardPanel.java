@@ -135,7 +135,7 @@ public class PlayerBoardPanel extends JPanel {
 
             selected = square;
             square.setSelected(true);
-            moveableTiles = clickedPiece.getVisibleTiles(currentGame.getBoard().getBoardState());
+            moveableTiles = clickedPiece.getVisibleTiles(currentGame.getBoard());
 
             statusPanel.showMessage("Selected " + square.getSquareName());
             return;
