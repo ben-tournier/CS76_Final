@@ -28,13 +28,24 @@ public class SquareButton extends JButton {
      * @param col the column, 1 to 8, where 1 is the left side (the a-file)
      */
     public SquareButton(int row, int col) {
+        this(row, col, DEFAULT_PIXEL_SIZE);
+    }
+
+    /** Width and height of a square in pixels when no size is given. */
+    public static final int DEFAULT_PIXEL_SIZE = 70;
+
+    /**
+     * Creates an empty square at the given position with the given size in pixels.
+     * Larger boards use smaller squares so the window still fits on screen.
+     */
+    public SquareButton(int row, int col, int pixelSize) {
         this.row = row;
         this.col = col;
 
         // Squares alternate colors: a1 (row 1, col 1) is dark, so dark when row + col is even.
         baseColor = (row + col) % 2 == 0 ? DARK : LIGHT;
 
-        setPreferredSize(new Dimension(70, 70));
+        setPreferredSize(new Dimension(pixelSize, pixelSize));
         setFont(new Font("Segoe UI Symbol", Font.PLAIN, 40)); // font with chess glyphs on Windows
         setFocusPainted(false);  // no focus outline around the piece
         setBorderPainted(false); // no button border, so squares sit flush

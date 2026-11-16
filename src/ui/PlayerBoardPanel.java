@@ -1,7 +1,9 @@
 package ui;
 
 import java.util.ArrayList;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
@@ -33,6 +35,12 @@ public class PlayerBoardPanel extends JPanel {
         squares = new SquareButton[size][size];
         setLayout(new GridLayout(size, size));
 
+        // Shrinking the squares on big boards so two windows still fit side by side on screen.
+        // An 8x8 board keeps the normal 70px squares.
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int maxBoardPixels = Math.min(screenSize.width / 2 - 40, screenSize.height - 150);
+        int squarePixels = Math.min(SquareButton.DEFAULT_PIXEL_SIZE, maxBoardPixels / size);
+
         // GridLayout fills top-left to bottom-right, so the order squares are added decides which way the board faces.
         //     Not flipped (white): row 8 at the top, column 1 (a-file) on the left.
         //     Flipped (black): row 1 at the top, column 8 (h-file) on the left.
@@ -52,7 +60,7 @@ public class PlayerBoardPanel extends JPanel {
                     col = screenCol + 1;
                 }
 
-                SquareButton square = new SquareButton(row, col);
+                SquareButton square = new SquareButton(row, col, squarePixels);
                 square.addActionListener(e -> handleSquareClick(square));
                 squares[row - 1][col - 1] = square; // Converting the position to an index.
                 add(square);

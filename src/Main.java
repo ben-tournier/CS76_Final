@@ -12,14 +12,20 @@ public class Main {
         // Swing UI should be created on the Event Dispatch Thread.
         // The start menu shows first; clicking "Play Classic" calls startClassicGame().
         SwingUtilities.invokeLater(() -> {
-            StartMenuFrame menu = new StartMenuFrame(Main::startClassicGame);
+            StartMenuFrame menu = new StartMenuFrame(Main::startClassicGame, Main::startGame);
             menu.setVisible(true);
         });
     }
 
-    // Sets up the board and players, then opens the chess board window.
+    // Classic mode always uses the standard 8x8 board.
     private static void startClassicGame() {
-        board gameBoard = new board(8);
+        startGame(8);
+    }
+
+    // Sets up a board of the passed size and the players, then opens the chess board window.
+    // Used by classic mode (size 8) and the custom board mode (size chosen by the user).
+    private static void startGame(int boardSize) {
+        board gameBoard = new board(boardSize);
         player player1 = new player(true);
         player player2 = new player(false);
 
