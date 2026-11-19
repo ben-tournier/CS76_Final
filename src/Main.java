@@ -12,19 +12,29 @@ public class Main {
         // Swing UI should be created on the Event Dispatch Thread.
         // The start menu shows first; clicking "Play Classic" calls startClassicGame().
         SwingUtilities.invokeLater(() -> {
-            StartMenuFrame menu = new StartMenuFrame(Main::startClassicGame, Main::startGame);
+            StartMenuFrame menu = new StartMenuFrame(Main::startClassicGame, Main::startCustomGame, Main::startFogOfWarGame);
             menu.setVisible(true);
         });
     }
 
     // Classic mode always uses the standard 8x8 board.
     private static void startClassicGame() {
-        startGame(8);
+        startGame(8, false);
+    }
+
+    // Custom board mode uses the size the user picked in the menu.
+    private static void startCustomGame(int boardSize) {
+        startGame(boardSize, false);
+    }
+
+    // Fog of War mode: a standard 8x8 board where each player only sees what their pieces can move to.
+    private static void startFogOfWarGame() {
+        startGame(8, true);
     }
 
     // Sets up a board of the passed size and the players, then opens the chess board window.
-    // Used by classic mode (size 8) and the custom board mode (size chosen by the user).
-    private static void startGame(int boardSize) {
+    // fogOfWar turns on Fog of War mode.
+    private static void startGame(int boardSize, boolean fogOfWar) {
         board gameBoard = new board(boardSize);
         player player1 = new player(true);
         player player2 = new player(false);
@@ -67,6 +77,6 @@ public class Main {
         gameBoard.spawnPiece(enPassantPawn, player2, enPassantPawn.getPosition());
 
         // Asks for Two Player or vs Computer and opens the board windows.
-        GameLauncher.startGame(gameBoard, player1, player2);
+        GameLauncher.startGame(gameBoard, player1, player2, fogOfWar);
     }
 }

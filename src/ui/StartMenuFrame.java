@@ -20,6 +20,9 @@ public class StartMenuFrame extends JFrame {
     /** What to run when "Custom Board" is clicked. Takes the board size the user picked. */
     private final IntConsumer onPlayCustom;
 
+    /** What to run when "Fog of War" is clicked. */
+    private final Runnable onPlayFogOfWar;
+
     /** Smallest and largest board sizes the user can pick for a custom board. */
     public static final int MIN_CUSTOM_SIZE = 8;
     public static final int MAX_CUSTOM_SIZE = 16;
@@ -30,17 +33,19 @@ public class StartMenuFrame extends JFrame {
      *
      * @param onPlayClassic what to run when "Play Classic" is clicked
      * @param onPlayCustom  what to run when "Custom Board" is clicked, given the chosen size
+     * @param onPlayFogOfWar what to run when "Fog of War" is clicked
      */
-    public StartMenuFrame(Runnable onPlayClassic, IntConsumer onPlayCustom) {
+    public StartMenuFrame(Runnable onPlayClassic, IntConsumer onPlayCustom, Runnable onPlayFogOfWar) {
         super("CS 67 Chess - Start Menu");
         this.onPlayClassic = onPlayClassic;
         this.onPlayCustom = onPlayCustom;
+        this.onPlayFogOfWar = onPlayFogOfWar;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false); // keep the grid of tiles evenly sized
 
         // The menu panel is told what Play and Quit should do. It does not
         // need to know anything about the board.
-        add(new StartMenuPanel(this::startClassicGame, this::startCustomGame, this::dispose));
+        add(new StartMenuPanel(this::startClassicGame, this::startFogOfWarGame, this::startCustomGame, this::dispose));
 
         pack();                      // size the window to fit the menu
         setLocationRelativeTo(null); // center on screen
@@ -55,6 +60,14 @@ public class StartMenuFrame extends JFrame {
     private void startClassicGame() {
         onPlayClassic.run(); // opens the board window first so the program keeps running
         dispose();           // then close the menu window
+    }
+
+    /**
+     * Closes the menu and starts a Fog of War game.
+     */
+    private void startFogOfWarGame() {
+        onPlayFogOfWar.run();
+        dispose();
     }
 
     /**
