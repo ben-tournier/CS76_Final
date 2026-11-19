@@ -45,6 +45,11 @@ public class player {
     // Returns true if the player does have a piece that can see the tile, false otherwise.
     public boolean canSeeTile(board gameBoard, int rowChecking, int colChecking) {
         for (piece piece : playerPieces) {
+
+            if (piece instanceof king) {
+                continue;
+            }
+
             ArrayList<int[]> visibleTiles = piece.getVisibleTiles(gameBoard);
 
             for (int[] position : visibleTiles) {

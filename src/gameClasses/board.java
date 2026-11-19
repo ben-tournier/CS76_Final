@@ -1,6 +1,7 @@
 package gameClasses;
 
 import gameClasses.pieces.piece;
+import gameClasses.pieces.king;
 import java.util.ArrayList;
 
 public class board {
@@ -109,12 +110,27 @@ public class board {
     public boolean playerIsInCheck(player attackingPlayer, player defendingPlayer) {
 
         // Get the position of the king we are checking.
-        int[] kingPosition = defendingPlayer.getKingPosition();
+        int[] kingPosition = new int[2];
+        for (int row=1; row<=getBoardSize(); row++) {
+            for (int col=1;col<=getBoardSize(); col++) {
+                piece pieceChecking = getPiece(row, col);
+
+                if (pieceChecking == null) {continue;}
+
+                if (pieceChecking instanceof king && pieceChecking.pieceIsWhite() == defendingPlayer.controlsWhite()) {
+                    kingPosition = pieceChecking.getPosition();
+                }
+            }
+        }
 
         // Iterate through each attacking player's pieces.
         for (piece attackingPiece : attackingPlayer.getPieces()) {
 
             // Get the squares that the attacking piece can see.
+            if (attackingPiece == null) {
+                continue;
+            }
+
             ArrayList<int[]> squaresAttacking = attackingPiece.getVisibleTiles(this);
 
             // iterate through each of the squares the attacking piece can see

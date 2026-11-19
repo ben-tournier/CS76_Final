@@ -88,7 +88,7 @@ public class GameLauncher {
         JFrame humanWindow = createWindow(currentGame, currentGame.getWhitePlayer(), false, null);
         humanWindow.setLocationRelativeTo(null);
 
-        computerOpponent computer = new computerOpponent(currentGame, currentGame.getBlackPlayer());
+        computerOpponent computer = new computerOpponent(currentGame, currentGame.getBlackPlayer(), currentGame.getWhitePlayer());
 
         // After every move, if it is now the computer's turn, wait a moment and then let it move.
         // A Timer is used instead of Thread.sleep so the window does not freeze while waiting.
@@ -98,6 +98,8 @@ public class GameLauncher {
                 computerTimer.setRepeats(false);
                 computerTimer.start();
             }
+
+            else if (currentGame.isOver() == true) {humanWindow.dispose();}
         });
 
         humanWindow.setVisible(true);
