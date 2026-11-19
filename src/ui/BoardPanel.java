@@ -174,7 +174,7 @@ public class BoardPanel extends JPanel {
 
                 }
 
-                // If the pawn is moving diagonally, but to an empty square
+                // If the pawn is moving diagonally, but to an empty square (implies en passant)
                 else if (Math.abs(newPosition[1] - oldPosition[1]) == 1 && movingToEmpty == true) {
                     int pawnDirectionIndicator;
 

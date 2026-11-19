@@ -29,43 +29,55 @@ public class Main {
         player player1 = new player(true);
         player player2 = new player(false);
 
-        // rook enemyRook1 = new rook(2, 1);
-        // rook enemyRook2 = new rook(1, 1);
-        // queen enemyQueen = new queen(3, 2);
-        // knight enemyKnight = new knight(3, 3);
-        // pawn enemyPawn = new pawn(4, 4);
+        for (int col=1; col<=8; col++) {
+            pawn newWhitePawn = new pawn(2, col);
+            pawn newBlackPawn = new pawn(7, col);
 
-        // bishop friendlyBishop = new bishop(1, 7);
-        // king friendlyKing = new king(player2.controlsWhite(), 1, 8);
-        // knight friendlyKnight = new knight(5, 5);
+            gameBoard.spawnPiece(newWhitePawn, player1, newWhitePawn.getPosition());
+            gameBoard.spawnPiece(newBlackPawn, player2, newBlackPawn.getPosition());
 
-        // gameBoard.spawnPiece(enemyRook1, player1, enemyRook1.getPosition());
-        // gameBoard.spawnPiece(enemyRook2, player1, enemyRook2.getPosition());
-        // gameBoard.spawnPiece(enemyQueen, player1, enemyQueen.getPosition());
-        // gameBoard.spawnPiece(enemyKnight, player1, enemyKnight.getPosition());
-        // gameBoard.spawnPiece(enemyPawn, player1, enemyPawn.getPosition());
+            if (col == 1 || col == 8) {
+                rook newWhiteRook = new rook(1, col);
+                rook newBlackRook = new rook(8, col);
 
-        // gameBoard.spawnPiece(friendlyBishop, player2, friendlyBishop.getPosition());
-        // gameBoard.spawnPiece(friendlyKing, player2, friendlyKing.getPosition());
-        // gameBoard.spawnPiece(friendlyKnight, player2, friendlyKnight.getPosition());
+                gameBoard.spawnPiece(newWhiteRook, player1, newWhiteRook.getPosition());
+                gameBoard.spawnPiece(newBlackRook, player2, newBlackRook.getPosition());
+            }
 
-        king castlingKing = new king(1, 5);
-        castlingKing.connectOpponent(player2);
-        rook castlingRook1 = new rook(1, 1);
-        rook castlingRook2 = new rook(1, 8);
-        pawn doubleMovingPawn = new pawn(2, 8);
+            if (col == 2 || col == 7) {
+                knight newWhiteKnight = new knight(1, col);
+                knight newBlackKnight = new knight(8, col);
 
-        gameBoard.spawnPiece(castlingKing, player1, castlingKing.getPosition());
-        gameBoard.spawnPiece(castlingRook1, player1, castlingRook1.getPosition());
-        gameBoard.spawnPiece(castlingRook2, player1, castlingRook2.getPosition());
-        gameBoard.spawnPiece(doubleMovingPawn, player1, doubleMovingPawn.getPosition());
+                gameBoard.spawnPiece(newWhiteKnight, player1, newWhiteKnight.getPosition());
+                gameBoard.spawnPiece(newBlackKnight, player2, newBlackKnight.getPosition());
+            }
 
-        bishop defendingBishop = new bishop(3, 2);
-        pawn enPassantPawn = new pawn(4, 7);
-        enPassantPawn.setAllowEnPassant(true);
-        gameBoard.spawnPiece(defendingBishop, player2, defendingBishop.getPosition());
-        gameBoard.spawnPiece(enPassantPawn, player2, enPassantPawn.getPosition());
+            if (col == 3 || col == 6) {
+                bishop newWhiteBishop = new bishop(1, col);
+                bishop newBlackBishop = new bishop(8, col);
 
+                gameBoard.spawnPiece(newWhiteBishop, player1, newWhiteBishop.getPosition());
+                gameBoard.spawnPiece(newBlackBishop, player2, newBlackBishop.getPosition());
+            }
+
+            if (col == 4) {
+                queen newWhiteQueen = new queen(1, col);
+                king newBlackKing = new king(8, col);
+                newBlackKing.connectOpponent(player1);
+
+                gameBoard.spawnPiece(newWhiteQueen, player1, newWhiteQueen.getPosition());
+                gameBoard.spawnPiece(newBlackKing, player2, newBlackKing.getPosition());
+            }
+
+            if (col == 5) {
+                king newWhiteKing = new king(1, col);
+                newWhiteKing.connectOpponent(player2);
+                queen newBlackQueen = new queen(8, col);
+
+                gameBoard.spawnPiece(newWhiteKing, player1, newWhiteKing.getPosition());
+                gameBoard.spawnPiece(newBlackQueen, player2, newBlackQueen.getPosition());
+            }
+        }
         // Asks for Two Player or vs Computer and opens the board windows.
         GameLauncher.startGame(gameBoard, player1, player2);
     }

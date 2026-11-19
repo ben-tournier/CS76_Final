@@ -11,11 +11,13 @@ import gameClasses.pieces.piece;
 public class computerOpponent {
     private game currentGame;
     private player controlledPlayer;
+    private player opponentPlayer;
     private Random random = new Random();
 
-    public computerOpponent(game currentGame, player controlledPlayer) {
+    public computerOpponent(game currentGame, player controlledPlayer, player opponentPlayer) {
         this.currentGame = currentGame;
         this.controlledPlayer = controlledPlayer;
+        this.opponentPlayer = opponentPlayer;
     }
 
     // Returns true if this computer is in charge of the passed player.
@@ -60,6 +62,16 @@ public class computerOpponent {
 
             // Iterating through the tiles the piece can see.
             for (int[] endingPosition : pieceChecking.getVisibleTiles(gameBoard)) {
+                board clonedBoard = gameBoard.copyBoard();
+                piece[][] clonedBoardState = clonedBoard.copyBoardState();
+                piece clonedPiece = clonedBoardState[pieceChecking.getPosition()[0] - 1][pieceChecking.getPosition()[1] - 1];
+
+                clonedBoard.movePiece(controlledPlayer, clonedPiece, endingPosition);
+                if (clonedBoard.playerIsInCheck(opponentPlayer, controlledPlayer)) {
+                    System.out.println("Cannot move " + clonedPiece + " to " + endingPosition[0] + ", " + endingPosition[1]);
+                    continue;
+                }
+                
                 int[][] move = new int[2][];
                 move[0] = startingPosition;
                 move[1] = endingPosition;
