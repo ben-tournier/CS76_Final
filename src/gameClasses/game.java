@@ -92,6 +92,40 @@ public class game {
         endTurn(movingPlayer, waitingPlayer);
     }
 
+    public void performCastle(piece piecemoving, int[] newPosition) {
+        if (gameIsOver) {
+            return;
+        }
+
+        player movingPlayer = currentPlayer;
+        player waitingPlayer = getOpponent(movingPlayer);
+
+        int kingRow = newPosition[0];
+        int newKingCol = newPosition[1];
+
+        gameBoard.movePiece(waitingPlayer, piecemoving, newPosition);
+
+        if (newKingCol - 1 < gameBoard.getBoardSize() - newKingCol) {
+            piece pieceCastline = gameBoard.getPiece(kingRow, 1);
+            int newOtherCol = newKingCol + 1;
+
+            gameBoard.movePiece(waitingPlayer, pieceCastline, kingRow, newOtherCol);
+        }
+
+        else {
+            piece pieceCastline = gameBoard.getPiece(kingRow, gameBoard.getBoardSize());
+            int newOtherCol = newKingCol - 1;
+
+            gameBoard.movePiece(waitingPlayer, pieceCastline, kingRow, newOtherCol);
+
+        }
+
+        statusMessage = getColorName(movingPlayer) + " castled to " + getSquareName(newPosition);
+
+        endTurn(movingPlayer, waitingPlayer);
+
+    }
+
     // Ends the game with the passed message (e.g. when the computer has no moves left).
     public void endGame(String message) {
         gameIsOver = true;

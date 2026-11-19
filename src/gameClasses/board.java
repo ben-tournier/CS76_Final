@@ -2,11 +2,13 @@ package gameClasses;
 
 import gameClasses.pieces.piece;
 import gameClasses.pieces.king;
+import gameClasses.pieces.pawn;
 import java.util.ArrayList;
 
 public class board {
     piece[][] boardState;
     int boardSize;
+    piece lastMovedPiece;
 
     public board(int size){
         boardSize = size;
@@ -169,9 +171,35 @@ public class board {
             defendingPlayer.getPieces().remove(boardState[pieceRow - 1][pieceCol - 1]);
         }
 
+        // If you move a pawn 2, allow it to be taken by en passant next turn
+        if (piecePlacing instanceof pawn) {
+            if (Math.abs(newRow - pieceRow) == 2) {
+                pawn pawnPlacing = (pawn) piecePlacing;
+                pawnPlacing.setAllowEnPassant(true);
+            }
+        }
+
+        // If the last moved piece was a pawn, remove the ability to take via en passant for future turns
+        if (lastMovedPiece instanceof pawn) {
+            pawn lastPawn = (pawn) lastMovedPiece;
+            lastPawn.setAllowEnPassant(false);
+        }
+
+        // If the pawn moved diagonally to an empty square, it was an en passant
+        if (lastMovedPiece instanceof pawn && Math.abs(newCol - pieceCol) == 1 && getPiece(newRow, newCol) == null) {
+            int directionalScalar;
+
+            if (piecePlacing.pieceIsWhite() == true) {directionalScalar=-1;}
+            else {directionalScalar=1;}
+
+            defendingPlayer.getPieces().remove(boardState[newRow + 1 * directionalScalar - 1][newCol - 1]);
+            boardState[newRow + 1 * directionalScalar - 1][newCol - 1] = null;
+        }
+
         placePiece(piecePlacing, newRow, newCol);
         piecePlacing.setPosition(newRow, newCol);
         piecePlacing.moved();
+        lastMovedPiece = piecePlacing;
 
         boardState[pieceRow - 1][pieceCol - 1] = null;
     }

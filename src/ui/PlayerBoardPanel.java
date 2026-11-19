@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import gameClasses.game;
 import gameClasses.player;
 import gameClasses.pieces.piece;
+import gameClasses.pieces.king;
 
 // A board drawn from one player's point of view, so their pieces are at the bottom of the screen.
 // Works like BoardPanel, but:
@@ -130,7 +131,20 @@ public class PlayerBoardPanel extends JPanel {
         // The game moves the piece and then tells every window to redraw.
         if (selected != null && isMoveableTile(square.getPosition())) {
             piece pieceMoving = currentGame.getBoard().getPiece(selected.getPosition());
+
+            if (pieceMoving instanceof king) {
+                int oldCol = selected.getPosition()[1];
+                int newCol = square.getPosition()[1];
+
+                if (Math.abs(newCol - oldCol) >= 2) {
+                    currentGame.performCastle(pieceMoving, square.getPosition());
+                    clearSelection();
+                    return;
+                }
+            }
+
             clearSelection();
+
             currentGame.makeMove(pieceMoving, square.getPosition());
             return;
         }

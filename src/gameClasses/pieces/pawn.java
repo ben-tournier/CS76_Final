@@ -57,7 +57,7 @@ public class pawn extends piece {
 
         // Checking the tile two spaces in front of the pawn (if that would be valid).
         // The tile must be empty for it to be a possible move.
-        if (this.canDoubleMove() == true) {
+        if (this.canDoubleMove() == true && pieceChecking == null) {
             rowChecking = pawnRow + 2 * directionIndicator;
             colChecking = pawnCol;
 
