@@ -25,13 +25,13 @@ import javax.swing.SwingConstants;
  *   |  Classic  |  (soon)   |  Board    |
  *   +-----------+-----------+-----------+
  *   |  Random   |  Options  |   Quit    |
- *   |  Effects  |  (soon)   |           |
+ *   |  Effects  |           |           |
  *   +-----------+-----------+-----------+
  * </pre>
  * The tiles are laid out in a grid and colored like board squares, so the
  * menu matches the look of the board.
  * <p>
- * Only "Play Classic" and "Quit" work right now. The other tiles are
+ * "Fog of War" and "Random Effects" do not work yet. Those tiles are
  * placeholders for game modes and options from the README's
  * "Potential Changes" list. They can't be clicked and say "Coming soon".
  * <p>
@@ -47,9 +47,10 @@ public class StartMenuPanel extends JPanel {
 
     // Same colors as SquareButton, so the menu matches the board.
     // (Copied rather than shared so SquareButton did not need to change.)
-    private static final Color LIGHT = new Color(240, 217, 181);
-    private static final Color DARK = new Color(181, 136, 99);
-    private static final Color BACKGROUND = new Color(60, 45, 35); // dark wood around the grid
+    // Not private so OptionsPanel can use the same colors.
+    static final Color LIGHT = new Color(240, 217, 181);
+    static final Color DARK = new Color(181, 136, 99);
+    static final Color BACKGROUND = new Color(60, 45, 35); // dark wood around the grid
     private static final Color PLACEHOLDER_TEXT = new Color(110, 85, 65); // dimmed text for "Coming soon" tiles
 
     /** Counts tiles as they are added, so they alternate light/dark like a board. */
@@ -59,15 +60,17 @@ public class StartMenuPanel extends JPanel {
      * Builds the menu: a title on top and a grid of tiles below it.
      *
      * @param onPlay what to do when "Play Classic" is clicked (e.g. open the board)
+     * @param onCustom what to do when "Custom Board" is clicked
+     * @param onOptions what to do when "Options" is clicked (e.g. show the options screen)
      * @param onQuit what to do when "Quit" is clicked (e.g. close the program)
      */
-    public StartMenuPanel(Runnable onPlay, Runnable onCustom, Runnable onQuit) {
+    public StartMenuPanel(Runnable onPlay, Runnable onCustom, Runnable onOptions, Runnable onQuit) {
         setLayout(new BorderLayout(0, 20)); // 20px gap between title and grid
         setBackground(BACKGROUND);
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30)); // padding around the edges
 
         add(createTitle(), BorderLayout.NORTH);
-        add(createTileGrid(onPlay, onCustom, onQuit), BorderLayout.CENTER);
+        add(createTileGrid(onPlay, onCustom, onOptions, onQuit), BorderLayout.CENTER);
     }
 
     /**
@@ -90,10 +93,11 @@ public class StartMenuPanel extends JPanel {
      *
      * @param onPlay action for the "Play Classic" tile
      * @param onCustom action for the "Custom Board" tile
+     * @param onOptions action for the "Options" tile
      * @param onQuit action for the "Quit" tile
      * @return the panel holding all the tiles
      */
-    private JPanel createTileGrid(Runnable onPlay, Runnable onCustom, Runnable onQuit) {
+    private JPanel createTileGrid(Runnable onPlay, Runnable onCustom, Runnable onOptions, Runnable onQuit) {
         // GridLayout(rows, cols, hgap, vgap): the gaps show the background
         // between tiles, like lines between squares.
         JPanel grid = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, 8, 8));
@@ -105,7 +109,7 @@ public class StartMenuPanel extends JPanel {
         grid.add(createTile("Fog of War", "Coming soon", null));
         grid.add(createTile("Custom Board", "Choose the board size", onCustom));
         grid.add(createTile("Random Effects", "Coming soon", null));
-        grid.add(createTile("Options", "Coming soon", null));
+        grid.add(createTile("Options", "Color and opponent", onOptions));
         grid.add(createTile("Quit", "Exit the game", onQuit));
 
         return grid;

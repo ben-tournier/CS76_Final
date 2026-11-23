@@ -1,6 +1,7 @@
 import javax.swing.SwingUtilities;
 
 import ui.GameLauncher;
+import ui.GameOptions;
 import ui.StartMenuFrame;
 import gameClasses.*;
 import gameClasses.pieces.*;
@@ -18,13 +19,14 @@ public class Main {
     }
 
     // Classic mode always uses the standard 8x8 board.
-    private static void startClassicGame() {
-        startGame(8);
+    private static void startClassicGame(GameOptions options) {
+        startGame(8, options);
     }
 
     // Sets up a board of the passed size and the players, then opens the chess board window.
     // Used by classic mode (size 8) and the custom board mode (size chosen by the user).
-    private static void startGame(int boardSize) {
+    // The options hold the mode and color picked on the options screen.
+    private static void startGame(int boardSize, GameOptions options) {
         board gameBoard = new board(boardSize);
         player player1 = new player(true);
         player player2 = new player(false);
@@ -78,7 +80,7 @@ public class Main {
                 gameBoard.spawnPiece(newBlackQueen, player2, newBlackQueen.getPosition());
             }
         }
-        // Asks for Two Player or vs Computer and opens the board windows.
-        GameLauncher.startGame(gameBoard, player1, player2);
+        // Opens the board windows for the mode picked on the options screen.
+        GameLauncher.startGame(gameBoard, player1, player2, options);
     }
 }

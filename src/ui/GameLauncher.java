@@ -3,9 +3,9 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Random;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import gameClasses.board;
@@ -13,9 +13,9 @@ import gameClasses.computerOpponent;
 import gameClasses.game;
 import gameClasses.player;
 
-// Asks which mode to play and opens the board windows for it.
+// Opens the board windows for the mode picked on the options screen.
 //     Two Player: two windows side by side, one for white and one (flipped) for black.
-//     vs Computer: one window for white, black is moved by a computerOpponent.
+//     vs Computer: one window for the color picked on the options screen. The other color is moved by a computerOpponent.
 // Main calls startGame after it has set up the board and players.
 public class GameLauncher {
 
@@ -25,25 +25,38 @@ public class GameLauncher {
     // Space between the two windows in two player mode, in pixels.
     private static final int WINDOW_GAP = 20;
 
-    public static void startGame(board gameBoard, player firstPlayer, player secondPlayer) {
-        String[] options = {"Two Player", "vs Computer"};
-
-        int choice = JOptionPane.showOptionDialog(null, "How do you want to play?", "Choose a Mode",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
-        // Closing the dialog without picking cancels the game.
-        if (choice == JOptionPane.CLOSED_OPTION) {
-            return;
-        }
-
+    public static void startGame(board gameBoard, player firstPlayer, player secondPlayer, GameOptions options) {
         game currentGame = new game(gameBoard, firstPlayer, secondPlayer);
 
-        if (choice == 0) {
+        if (options.getModeChoice() == GameOptions.ModeChoice.TWO_PLAYER) {
             startTwoPlayer(currentGame);
         }
         else {
-            startVsComputer(currentGame);
+            player humanPlayer = getHumanPlayer(currentGame, options.getColorChoice());
+            startVsComputer(currentGame, humanPlayer);
         }
+    }
+
+    // Returns the player the person will control based on the color they picked.
+    // Random picks white or black when the game starts, so it can be different each game.
+    private static player getHumanPlayer(game currentGame, GameOptions.ColorChoice colorChoice) {
+        boolean playAsWhite;
+
+        if (colorChoice == GameOptions.ColorChoice.WHITE) {
+            playAsWhite = true;
+        }
+        else if (colorChoice == GameOptions.ColorChoice.BLACK) {
+            playAsWhite = false;
+        }
+        else {
+            playAsWhite = new Random().nextBoolean();
+        }
+
+        if (playAsWhite) {
+            return currentGame.getWhitePlayer();
+        }
+
+        return currentGame.getBlackPlayer();
     }
 
     // Opens a window for each player next to each other.
@@ -68,20 +81,21 @@ public class GameLauncher {
         refreshWindow(blackWindow);
     }
 
-    // Opens one window for the person playing white and lets the computer play black.
-    private static void startVsComputer(game currentGame) {
-        JFrame humanWindow = createWindow(currentGame, currentGame.getWhitePlayer(), false);
+    // Opens one window for the person and lets the computer play the other color.
+    // The board is flipped if the person is playing black, so their pieces are at the bottom.
+    private static void startVsComputer(game currentGame, player humanPlayer) {
+        player computerPlayer = currentGame.getOpponent(humanPlayer);
+        boolean flipped = humanPlayer.controlsWhite() == false;
+
+        JFrame humanWindow = createWindow(currentGame, humanPlayer, flipped);
         humanWindow.setLocationRelativeTo(null);
 
-        computerOpponent computer = new computerOpponent(currentGame, currentGame.getBlackPlayer(), currentGame.getWhitePlayer());
+        computerOpponent computer = new computerOpponent(currentGame, computerPlayer, humanPlayer);
 
-        // After every move, if it is now the computer's turn, wait a moment and then let it move.
-        // A Timer is used instead of Thread.sleep so the window does not freeze while waiting.
+        // After every move, if it is now the computer's turn, let it move.
         currentGame.addChangeListener(() -> {
             if (currentGame.isOver() == false && computer.controls(currentGame.getCurrentPlayer())) {
-                Timer computerTimer = new Timer(COMPUTER_DELAY, e -> computer.takeTurn());
-                computerTimer.setRepeats(false);
-                computerTimer.start();
+                startComputerTurn(computer);
             }
 
             else if (currentGame.isOver() == true) {humanWindow.dispose();}
@@ -89,6 +103,20 @@ public class GameLauncher {
 
         humanWindow.setVisible(true);
         refreshWindow(humanWindow);
+
+        // If the computer is white it moves first, so its turn has to be started here.
+        // Otherwise it would wait for a move that never comes.
+        if (computer.controls(currentGame.getCurrentPlayer())) {
+            startComputerTurn(computer);
+        }
+    }
+
+    // Waits a moment and then lets the computer move.
+    // A Timer is used instead of Thread.sleep so the window does not freeze while waiting.
+    private static void startComputerTurn(computerOpponent computer) {
+        Timer computerTimer = new Timer(COMPUTER_DELAY, e -> computer.takeTurn());
+        computerTimer.setRepeats(false);
+        computerTimer.start();
     }
 
     // Builds a window holding a board for the passed player and a status bar underneath.
