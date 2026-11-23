@@ -14,6 +14,10 @@ public class SquareButton extends JButton {
     private static final Color LIGHT = new Color(240, 217, 181);    // light squares
     private static final Color DARK = new Color(181, 136, 99);      // dark squares
     private static final Color SELECTED = new Color(246, 246, 105); // highlight for the selected square
+    private static final Color FOG_LIGHT = new Color(95, 95, 100);  // hidden light squares (Fog of War)
+    private static final Color FOG_DARK = new Color(70, 70, 75);    // hidden dark squares (Fog of War)
+
+    private boolean hidden = false; // true when the square is covered by fog
 
     private final int row;
     private final int col;
@@ -68,7 +72,40 @@ public class SquareButton extends JButton {
     @Override
     public void setSelected(boolean selected) {
         super.setSelected(selected);
-        setBackground(selected ? SELECTED : baseColor);
+        updateBackground();
+    }
+
+    /**
+     * Covers this square with fog or uncovers it (Fog of War mode).
+     * The board panel is in charge of also hiding any piece on the square.
+     *
+     * @param hidden true to show the square as fog, false to show it normally
+     */
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+        updateBackground();
+    }
+
+    /**
+     * @return true if this square is currently covered by fog
+     */
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    /**
+     * Picks the background color: fog if hidden, yellow if selected, otherwise the normal square color.
+     */
+    private void updateBackground() {
+        if (hidden) {
+            setBackground(baseColor == DARK ? FOG_DARK : FOG_LIGHT);
+        }
+        else if (isSelected()) {
+            setBackground(SELECTED);
+        }
+        else {
+            setBackground(baseColor);
+        }
     }
 
     /**

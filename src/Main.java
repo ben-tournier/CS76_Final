@@ -1,6 +1,7 @@
 import javax.swing.SwingUtilities;
 
 import ui.GameLauncher;
+import ui.GameOptions;
 import ui.StartMenuFrame;
 import gameClasses.*;
 import gameClasses.pieces.*;
@@ -12,19 +13,30 @@ public class Main {
         // Swing UI should be created on the Event Dispatch Thread.
         // The start menu shows first; clicking "Play Classic" calls startClassicGame().
         SwingUtilities.invokeLater(() -> {
-            StartMenuFrame menu = new StartMenuFrame(Main::startClassicGame, Main::startGame);
+            StartMenuFrame menu = new StartMenuFrame(Main::startClassicGame, Main::startCustomGame, Main::startFogOfWarGame);
             menu.setVisible(true);
         });
     }
 
     // Classic mode always uses the standard 8x8 board.
-    private static void startClassicGame() {
-        startGame(8);
+    private static void startClassicGame(GameOptions options) {
+        startGame(8, options, false);
+    }
+
+    // Custom board mode uses the size the user picked in the menu.
+    private static void startCustomGame(int boardSize, GameOptions options) {
+        startGame(boardSize, options, false);
+    }
+
+    // Fog of War mode: a standard 8x8 board where each player only sees what their pieces can move to.
+    private static void startFogOfWarGame(GameOptions options) {
+        startGame(8, options, true);
     }
 
     // Sets up a board of the passed size and the players, then opens the chess board window.
-    // Used by classic mode (size 8) and the custom board mode (size chosen by the user).
-    private static void startGame(int boardSize) {
+    // Used by classic mode (size 8), Fog of War (size 8) and the custom board mode (size chosen by the user).
+    // The options hold the mode and color picked on the options screen. fogOfWar turns on Fog of War mode.
+    private static void startGame(int boardSize, GameOptions options, boolean fogOfWar) {
         board gameBoard = new board(boardSize);
         player player1 = new player(true);
         player player2 = new player(false);
@@ -78,7 +90,7 @@ public class Main {
                 gameBoard.spawnPiece(newBlackQueen, player2, newBlackQueen.getPosition());
             }
         }
-        // Asks for Two Player or vs Computer and opens the board windows.
-        GameLauncher.startGame(gameBoard, player1, player2);
+        // Opens the board windows for the mode picked on the options screen.
+        GameLauncher.startGame(gameBoard, player1, player2, options, fogOfWar);
     }
 }
