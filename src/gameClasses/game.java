@@ -16,6 +16,9 @@ public class game {
     private player currentPlayer;
 
     private boolean gameIsOver = false;
+
+    // When true, each player can only see the squares their pieces can move to (see fogOfWar).
+    private boolean fogOfWarEnabled = false;
     private String statusMessage = "White moves first";
 
     // Remembers if each side had a king when the game started.
@@ -53,6 +56,9 @@ public class game {
     public boolean isOver() {return gameIsOver;}
     public String getStatusMessage() {return statusMessage;}
 
+    public boolean isFogOfWar() {return fogOfWarEnabled;}
+    public void setFogOfWar(boolean enabled) {fogOfWarEnabled = enabled;}
+
     // Returns true if it is the passed player's turn and the game is still going.
     public boolean isPlayersTurn(player playerChecking) {
         return gameIsOver == false && currentPlayer == playerChecking;
@@ -87,7 +93,13 @@ public class game {
         player waitingPlayer = getOpponent(movingPlayer);
 
         gameBoard.movePiece(waitingPlayer, pieceMoving, newPosition);
-        statusMessage = getColorName(movingPlayer) + " moved to " + getSquareName(newPosition);
+        // In Fog of War the message leaves out the square so it does not reveal where the opponent went.
+        if (fogOfWarEnabled) {
+            statusMessage = getColorName(movingPlayer) + " moved";
+        }
+        else {
+            statusMessage = getColorName(movingPlayer) + " moved to " + getSquareName(newPosition);
+        }
 
         endTurn(movingPlayer, waitingPlayer);
     }

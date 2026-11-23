@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 import javax.swing.Timer;
 
 import gameClasses.board;
@@ -25,8 +27,10 @@ public class GameLauncher {
     // Space between the two windows in two player mode, in pixels.
     private static final int WINDOW_GAP = 20;
 
-    public static void startGame(board gameBoard, player firstPlayer, player secondPlayer, GameOptions options) {
+    // fogOfWar turns on Fog of War mode for the game.
+    public static void startGame(board gameBoard, player firstPlayer, player secondPlayer, GameOptions options, boolean fogOfWar) {
         game currentGame = new game(gameBoard, firstPlayer, secondPlayer);
+        currentGame.setFogOfWar(fogOfWar);
 
         if (options.getModeChoice() == GameOptions.ModeChoice.TWO_PLAYER) {
             startTwoPlayer(currentGame);
@@ -61,8 +65,15 @@ public class GameLauncher {
 
     // Opens a window for each player next to each other.
     private static void startTwoPlayer(game currentGame) {
-        JFrame whiteWindow = createWindow(currentGame, currentGame.getWhitePlayer(), false);
-        JFrame blackWindow = createWindow(currentGame, currentGame.getBlackPlayer(), true);
+        // In Fog of War both windows are on the same screen, so the two windows share a handoff that
+        // keeps both boards covered between turns (see FogTurnHandoff). Without fog there is no handoff.
+        FogTurnHandoff handoff = null;
+        if (currentGame.isFogOfWar()) {
+            handoff = new FogTurnHandoff(currentGame);
+        }
+
+        JFrame whiteWindow = createWindow(currentGame, currentGame.getWhitePlayer(), false, handoff);
+        JFrame blackWindow = createWindow(currentGame, currentGame.getBlackPlayer(), true, handoff);
 
         // Placing the windows side by side in the middle of the screen.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -87,7 +98,7 @@ public class GameLauncher {
         player computerPlayer = currentGame.getOpponent(humanPlayer);
         boolean flipped = humanPlayer.controlsWhite() == false;
 
-        JFrame humanWindow = createWindow(currentGame, humanPlayer, flipped);
+        JFrame humanWindow = createWindow(currentGame, humanPlayer, flipped, null);
         humanWindow.setLocationRelativeTo(null);
 
         computerOpponent computer = new computerOpponent(currentGame, computerPlayer, humanPlayer);
@@ -120,25 +131,57 @@ public class GameLauncher {
     }
 
     // Builds a window holding a board for the passed player and a status bar underneath.
-    private static JFrame createWindow(game currentGame, player owner, boolean flipped) {
-        JFrame window = new JFrame("CS 67 Chess - " + currentGame.getColorName(owner));
+    // handoff is shared by both windows in two player Fog of War, and null otherwise.
+    private static JFrame createWindow(game currentGame, player owner, boolean flipped, FogTurnHandoff handoff) {
+        String title = "CS 67 Chess - " + currentGame.getColorName(owner);
+        if (currentGame.isFogOfWar()) {
+            title += " (Fog of War)";
+        }
+
+        JFrame window = new JFrame(title);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLayout(new BorderLayout());
 
         StatusPanel statusPanel = new StatusPanel();
-        PlayerBoardPanel boardPanel = new PlayerBoardPanel(statusPanel, currentGame, owner, flipped);
+        PlayerBoardPanel boardPanel = new PlayerBoardPanel(statusPanel, currentGame, owner, flipped, handoff);
 
-        window.add(boardPanel, BorderLayout.CENTER);
+        if (handoff == null) {
+            window.add(boardPanel, BorderLayout.CENTER);
+        }
+
+        // Two player Fog of War: the prompt banner goes above the board, and the cover card is
+        // stacked on top of the board so it shows in the middle of the board while it is covered.
+        else {
+            window.add(boardPanel.getPromptBanner(), BorderLayout.NORTH);
+
+            // OverlayLayout stacks its children on top of each other. The first one added is drawn on top.
+            // Optimized drawing is turned off so Swing knows the children overlap and redraws them correctly.
+            JPanel boardArea = new JPanel() {
+                @Override
+                public boolean isOptimizedDrawingEnabled() {return false;}
+            };
+            boardArea.setLayout(new OverlayLayout(boardArea));
+            boardArea.add(boardPanel.getCoverCard());
+            boardArea.add(boardPanel);
+
+            window.add(boardArea, BorderLayout.CENTER);
+        }
+
         window.add(statusPanel, BorderLayout.SOUTH);
         window.pack();
+
+        // Remembering the board so refreshWindow can find it, wherever it ended up in the window.
+        window.getRootPane().putClientProperty(BOARD_PANEL_KEY, boardPanel);
 
         return window;
     }
 
+    // Name used to store each window's board on the window (see createWindow).
+    private static final String BOARD_PANEL_KEY = "boardPanel";
+
     // Finds the board inside the window and redraws it.
     private static void refreshWindow(JFrame window) {
-        BorderLayout layout = (BorderLayout) window.getContentPane().getLayout();
-        PlayerBoardPanel boardPanel = (PlayerBoardPanel) layout.getLayoutComponent(BorderLayout.CENTER);
+        PlayerBoardPanel boardPanel = (PlayerBoardPanel) window.getRootPane().getClientProperty(BOARD_PANEL_KEY);
         boardPanel.refreshBoard();
     }
 }

@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
+import gameClasses.fogOfWar;
 import gameClasses.game;
 import gameClasses.player;
 import gameClasses.pieces.piece;
@@ -25,11 +26,26 @@ public class PlayerBoardPanel extends JPanel {
     private SquareButton selected; // null when nothing is selected
     private ArrayList<int[]> moveableTiles = new ArrayList<int[]>(); // Tiles the selected piece can move to.
 
+    // Two player Fog of War: decides when this board is uncovered and shows the Start Turn / End Turn prompts.
+    // null in every other mode, where the board is always shown.
+    private FogTurnHandoff handoff;
+
+    // The prompts for two player Fog of War (null in every other mode).
+    // GameLauncher places them in the window: the banner above the board and the card over the board.
+    private FogPromptBanner promptBanner;
+    private FogCoverCard coverCard;
+
     // flipped should be true for the black player, so black's pieces show at the bottom.
     public PlayerBoardPanel(StatusPanel statusPanel, game currentGame, player owner, boolean flipped) {
+        this(statusPanel, currentGame, owner, flipped, null);
+    }
+
+    // handoff should be the same object for both windows in two player Fog of War, and null otherwise.
+    public PlayerBoardPanel(StatusPanel statusPanel, game currentGame, player owner, boolean flipped, FogTurnHandoff handoff) {
         this.statusPanel = statusPanel;
         this.currentGame = currentGame;
         this.owner = owner;
+        this.handoff = handoff;
 
         int size = currentGame.getBoard().getBoardState().length;
         squares = new SquareButton[size][size];
@@ -69,7 +85,18 @@ public class PlayerBoardPanel extends JPanel {
 
         // Every time the game changes, redraw this board.
         currentGame.addChangeListener(this::refreshBoard);
+
+        // In two player Fog of War, also redraw whenever a player starts or ends their turn.
+        if (handoff != null) {
+            handoff.addChangeListener(this::refreshBoard);
+            promptBanner = new FogPromptBanner();
+            coverCard = new FogCoverCard();
+        }
     }
+
+    // The banner and card for two player Fog of War, or null in other modes.
+    public FogPromptBanner getPromptBanner() {return promptBanner;}
+    public FogCoverCard getCoverCard() {return coverCard;}
 
     // Redraws every square from the board and updates the status bar.
     // Empty squares are cleared so pieces that moved or were captured disappear.
@@ -78,12 +105,30 @@ public class PlayerBoardPanel extends JPanel {
 
         piece[][] boardState = currentGame.getBoard().getBoardState();
 
+        // Working out what this player is allowed to see in Fog of War.
+        // Once the game is over the fog is lifted so both players can see the final board.
+        boolean[][] visibleSquares = null; // null means everything is visible
+        boolean hideEverything = false;
+
+        if (currentGame.isFogOfWar() && currentGame.isOver() == false) {
+            if (handoff != null && handoff.isRevealedTo(owner) == false) {
+                hideEverything = true;
+            }
+            else {
+                visibleSquares = fogOfWar.getVisibleSquares(currentGame.getBoard(), owner.controlsWhite());
+            }
+        }
+
         for (int rowIndex = 0; rowIndex < boardState.length; rowIndex++) {
             for (int colIndex = 0; colIndex < boardState[0].length; colIndex++) {
                 piece currentPiece = boardState[rowIndex][colIndex];
                 SquareButton currentTile = squares[rowIndex][colIndex];
 
-                if (currentPiece == null) {
+                boolean squareIsHidden = hideEverything || (visibleSquares != null && visibleSquares[rowIndex][colIndex] == false);
+                currentTile.setHidden(squareIsHidden);
+
+                // Hidden squares never show a piece, even if one is there.
+                if (currentPiece == null || squareIsHidden) {
                     currentTile.setIcon(null);
                     continue;
                 }
@@ -99,7 +144,55 @@ public class PlayerBoardPanel extends JPanel {
         }
 
         statusPanel.setTurn(currentGame.getTurnName());
-        statusPanel.showMessage(currentGame.getStatusMessage());
+        updatePrompt();
+    }
+
+    // Updates the status bar, and in two player Fog of War also the banner and the card over the board.
+    private void updatePrompt() {
+        if (handoff == null) {
+            statusPanel.showMessage(currentGame.getStatusMessage());
+            return;
+        }
+
+        String ownerName = currentGame.getColorName(owner);
+        String opponentName = currentGame.getColorName(currentGame.getOpponent(owner));
+
+        // Game over: the fog is lifted, so just show the result.
+        if (currentGame.isOver()) {
+            statusPanel.showMessage(currentGame.getStatusMessage());
+            promptBanner.showCalm("Game over", currentGame.getStatusMessage());
+            coverCard.hideCard();
+        }
+
+        // This player has moved and is looking at their updated board.
+        else if (handoff.isWaitingToEnd(owner)) {
+            statusPanel.showMessage(currentGame.getStatusMessage());
+            promptBanner.showAction("Review your move", "Click End Turn when you are ready to pass to " + opponentName,
+                    "End Turn", () -> handoff.endTurn(owner));
+            coverCard.hideCard();
+        }
+
+        // Both boards are covered and it is this player's turn.
+        else if (handoff.isWaitingToStart(owner)) {
+            statusPanel.showMessage(currentGame.getStatusMessage());
+            promptBanner.showAction("Your turn is ready", "Click Start Turn on the board below");
+            coverCard.showCard(ownerName + "'s turn", "Make sure " + opponentName + " isn't looking",
+                    "Start Turn", () -> handoff.startTurn(owner));
+        }
+
+        // This player is taking their turn.
+        else if (handoff.isRevealedTo(owner)) {
+            statusPanel.showMessage(currentGame.getStatusMessage());
+            promptBanner.showCalm("Your turn", "Make your move");
+            coverCard.hideCard();
+        }
+
+        // The opponent is taking their turn (or has moved and not clicked End Turn yet).
+        else {
+            statusPanel.showMessage("Board hidden");
+            promptBanner.showCalm("Board hidden", "Waiting for " + opponentName + " to finish their turn");
+            coverCard.showCard("Board hidden", opponentName + " is taking their turn");
+        }
     }
 
     // Handles a click on a square.
@@ -110,6 +203,13 @@ public class PlayerBoardPanel extends JPanel {
 
         if (currentGame.isOver()) {
             statusPanel.showMessage(currentGame.getStatusMessage());
+            return;
+        }
+
+        // In two player Fog of War, blocking clicks while this board is covered or waiting for End Turn.
+        // The prompt in the status bar already says what to do, so it is shown again.
+        if (handoff != null && (handoff.isRevealedTo(owner) == false || handoff.isWaitingToEnd(owner))) {
+            updatePrompt();
             return;
         }
 

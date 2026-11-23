@@ -60,17 +60,18 @@ public class StartMenuPanel extends JPanel {
      * Builds the menu: a title on top and a grid of tiles below it.
      *
      * @param onPlay what to do when "Play Classic" is clicked (e.g. open the board)
+     * @param onFogOfWar what to do when "Fog of War" is clicked
      * @param onCustom what to do when "Custom Board" is clicked
      * @param onOptions what to do when "Options" is clicked (e.g. show the options screen)
      * @param onQuit what to do when "Quit" is clicked (e.g. close the program)
      */
-    public StartMenuPanel(Runnable onPlay, Runnable onCustom, Runnable onOptions, Runnable onQuit) {
+    public StartMenuPanel(Runnable onPlay, Runnable onFogOfWar, Runnable onCustom, Runnable onOptions, Runnable onQuit) {
         setLayout(new BorderLayout(0, 20)); // 20px gap between title and grid
         setBackground(BACKGROUND);
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30)); // padding around the edges
 
         add(createTitle(), BorderLayout.NORTH);
-        add(createTileGrid(onPlay, onCustom, onOptions, onQuit), BorderLayout.CENTER);
+        add(createTileGrid(onPlay, onFogOfWar, onCustom, onOptions, onQuit), BorderLayout.CENTER);
     }
 
     /**
@@ -92,12 +93,13 @@ public class StartMenuPanel extends JPanel {
      * placeholders by passing a real action instead of {@code null}.
      *
      * @param onPlay action for the "Play Classic" tile
+     * @param onFogOfWar action for the "Fog of War" tile
      * @param onCustom action for the "Custom Board" tile
      * @param onOptions action for the "Options" tile
      * @param onQuit action for the "Quit" tile
      * @return the panel holding all the tiles
      */
-    private JPanel createTileGrid(Runnable onPlay, Runnable onCustom, Runnable onOptions, Runnable onQuit) {
+    private JPanel createTileGrid(Runnable onPlay, Runnable onFogOfWar, Runnable onCustom, Runnable onOptions, Runnable onQuit) {
         // GridLayout(rows, cols, hgap, vgap): the gaps show the background
         // between tiles, like lines between squares.
         JPanel grid = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, 8, 8));
@@ -106,7 +108,7 @@ public class StartMenuPanel extends JPanel {
         // Tiles fill the grid left-to-right, top-to-bottom.
         // A null action means the tile is a "Coming soon" placeholder.
         grid.add(createTile("Play Classic", "Standard chess", onPlay));
-        grid.add(createTile("Fog of War", "Coming soon", null));
+        grid.add(createTile("Fog of War", "Only see where you can move", onFogOfWar));
         grid.add(createTile("Custom Board", "Choose the board size", onCustom));
         grid.add(createTile("Random Effects", "Coming soon", null));
         grid.add(createTile("Options", "Color and opponent", onOptions));
