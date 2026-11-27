@@ -77,7 +77,7 @@ public class board {
             for (int[] move : possibleMoves) {
                 
                 board clonedBoard = copyBoard();
-                piece[][] clonedBoardState = clonedBoard.getBoardState();
+                piece[][] clonedBoardState = clonedBoard.copyBoardState();
                 piece clonedPiece = clonedBoardState[pieceRow - 1][pieceCol - 1];
 
                 // This following section is recreating the players and assigning the pieces to them.
@@ -96,7 +96,7 @@ public class board {
                 }
 
                 // Simulating moving the piece to see if the created state is valid
-                clonedBoard.movePiece(attackingPlayer, clonedPiece, move[0], move[1]);
+                clonedBoard.movePiece(clonedAttacker, clonedPiece, move[0], move[1]);
 
                 // If the hypothetical move by the defending player created a state where they are not in check the game is not over.
                 if (clonedBoard.playerIsInCheck(clonedAttacker, clonedDefender) == false) {
@@ -167,8 +167,8 @@ public class board {
         int pieceRow = piecePosition[0];
         int pieceCol = piecePosition[1];
 
-        if (defendingPlayer.getPieces().contains(boardState[pieceRow - 1][pieceCol - 1])) {
-            defendingPlayer.getPieces().remove(boardState[pieceRow - 1][pieceCol - 1]);
+        if (defendingPlayer.getPieces().contains(boardState[newRow - 1][newCol - 1])) {
+            defendingPlayer.getPieces().remove(boardState[newRow - 1][newCol - 1]);
         }
 
         // If you move a pawn 2, allow it to be taken by en passant next turn
@@ -186,7 +186,7 @@ public class board {
         }
 
         // If the pawn moved diagonally to an empty square, it was an en passant
-        if (lastMovedPiece instanceof pawn && Math.abs(newCol - pieceCol) == 1 && getPiece(newRow, newCol) == null) {
+        if (piecePlacing instanceof pawn && lastMovedPiece instanceof pawn && Math.abs(newCol - pieceCol) == 1 && getPiece(newRow, newCol) == null) {
             int directionalScalar;
 
             if (piecePlacing.pieceIsWhite() == true) {directionalScalar=-1;}

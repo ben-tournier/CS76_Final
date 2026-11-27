@@ -25,10 +25,7 @@ public class knight extends piece {
     public ArrayList<int[]> getVisibleTiles(board gameBoard) {
         ArrayList<int[]> validMovements = new ArrayList<int[]>();
 
-        piece[][] gameState = gameBoard.getBoardState();
-        int boardRows = gameState.length;
-        int boardColumns = gameState[0].length;
-
+        int boardSize = gameBoard.getBoardSize();
         int row = getRow();
         int col = getCol();
 
@@ -51,7 +48,7 @@ public class knight extends piece {
             int colChecking = col + colMovement;
 
             // Skipping combinations where the knight would move off the board.
-            if (rowChecking < 1 || rowChecking > boardRows || colChecking < 1 || colChecking > boardColumns) {
+            if (rowChecking < 1 || rowChecking > boardSize || colChecking < 1 || colChecking > boardSize) {
                 continue;
             }
 
@@ -91,6 +88,7 @@ public class knight extends piece {
             System.err.println("Could not load image.png: " + exception.getMessage());
             return null;
         }
-    
     }
+
+    public String toString() {return "knight";}
 }

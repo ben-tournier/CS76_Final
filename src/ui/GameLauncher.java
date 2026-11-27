@@ -144,6 +144,7 @@ public class GameLauncher {
 
         StatusPanel statusPanel = new StatusPanel();
         PlayerBoardPanel boardPanel = new PlayerBoardPanel(statusPanel, currentGame, owner, flipped, handoff);
+        boardPanel.connectBoard(currentGame.getBoard());
 
         if (handoff == null) {
             window.add(boardPanel, BorderLayout.CENTER);

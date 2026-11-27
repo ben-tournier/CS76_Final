@@ -101,4 +101,6 @@ public class queen extends piece {
         }
     
     }
+
+    public String toString() {return "queen";}
 }

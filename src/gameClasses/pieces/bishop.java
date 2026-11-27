@@ -99,4 +99,6 @@ public class bishop extends piece {
         }
     
     }
+
+    public String toString() {return "bishop";}
 }

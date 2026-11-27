@@ -161,22 +161,14 @@ public class game {
         // Check and checkmate can only be looked for if the waiting player has a king.
         if (kingIsOnBoard(waitingPlayerIsWhite)) {
 
-            // The board's check functions are still being worked on, so if they throw an error
-            // the game skips the check message instead of crashing.
-            try {
-                if (gameBoard.playerIsInCheck(movingPlayer, waitingPlayer)) {
+            if (gameBoard.playerIsInCheck(movingPlayer, waitingPlayer)) {
 
-                    if (gameBoard.isGameOver(movingPlayer, waitingPlayer)) {
-                        endGame("Checkmate! " + getColorName(movingPlayer) + " wins!");
-                        return;
-                    }
-
-                    statusMessage += ". " + getColorName(waitingPlayer) + " is in check!";
+                if (gameBoard.isGameOver(movingPlayer, waitingPlayer)) {
+                    endGame("Checkmate! " + getColorName(movingPlayer) + " wins!");
+                    return;
                 }
-            }
 
-            catch (RuntimeException exception) {
-                System.err.println("Could not look for check: " + exception.getMessage());
+                statusMessage += ". " + getColorName(waitingPlayer) + " is in check!";
             }
         }
 

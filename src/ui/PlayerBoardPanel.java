@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import gameClasses.fogOfWar;
 import gameClasses.game;
+import gameClasses.board;
 import gameClasses.player;
 import gameClasses.pieces.piece;
 import gameClasses.pieces.king;
@@ -23,6 +24,7 @@ public class PlayerBoardPanel extends JPanel {
     private SquareButton[][] squares;
     private StatusPanel statusPanel;
     private game currentGame;
+    private board connectedBoard;
     private player owner; // The player using this window.
     private SquareButton selected; // null when nothing is selected
     private ArrayList<int[]> moveableTiles = new ArrayList<int[]>(); // Tiles the selected piece can move to.
@@ -231,15 +233,18 @@ public class PlayerBoardPanel extends JPanel {
         // The game moves the piece and then tells every window to redraw.
         if (selected != null && isMoveableTile(square.getPosition())) {
             piece pieceMoving = currentGame.getBoard().getPiece(selected.getPosition());
+            
+            int[] oldPosition = selected.getPosition();
+            int oldCol = oldPosition[1];
+            
+            int[] newPosition = square.getPosition();
+            int newCol = newPosition[1]; 
 
             if (pieceMoving instanceof king) {
-                int oldCol = selected.getPosition()[1];
-                int newCol = square.getPosition()[1];
 
                 if (Math.abs(newCol - oldCol) >= 2) {
-                    currentGame.performCastle(pieceMoving, square.getPosition());
+                    currentGame.performCastle(pieceMoving, newPosition);
                     clearSelection();
-                    return;
                 }
             }
 
@@ -288,4 +293,13 @@ public class PlayerBoardPanel extends JPanel {
 
         moveableTiles.clear();
     }
+
+    public void connectBoard(board gameBoard) {
+        connectedBoard = gameBoard;
+    }
+
+    public piece[][] getConnectedGameState() {
+        return connectedBoard.getBoardState();
+    }
+
 }

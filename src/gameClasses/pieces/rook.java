@@ -105,4 +105,6 @@ public class rook extends piece {
         }
     
     }
+
+    public String toString() {return "rook";}
 }

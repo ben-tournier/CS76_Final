@@ -144,4 +144,6 @@ public class king extends piece {
 
     public void connectOpponent(player opponent) {this.opponent=opponent;}
     public player getOpponent() {return this.opponent;}
+
+    public String toString() {return "king";}
 }

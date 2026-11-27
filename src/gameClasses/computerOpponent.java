@@ -63,12 +63,14 @@ public class computerOpponent {
             // Iterating through the tiles the piece can see.
             for (int[] endingPosition : pieceChecking.getVisibleTiles(gameBoard)) {
                 board clonedBoard = gameBoard.copyBoard();
-                piece[][] clonedBoardState = clonedBoard.copyBoardState();
-                piece clonedPiece = clonedBoardState[pieceChecking.getPosition()[0] - 1][pieceChecking.getPosition()[1] - 1];
+                piece clonedPiece = clonedBoard.getPiece(startingPosition);
 
-                clonedBoard.movePiece(controlledPlayer, clonedPiece, endingPosition);
-                if (clonedBoard.playerIsInCheck(opponentPlayer, controlledPlayer)) {
-                    System.out.println("Cannot move " + clonedPiece + " to " + endingPosition[0] + ", " + endingPosition[1]);
+                player clonedControlledPlayer = controlledPlayer.copyPlayer();
+                player clonedOpponentPlayer = opponentPlayer.copyPlayer();
+
+                clonedBoard.movePiece(clonedOpponentPlayer, clonedPiece, endingPosition);
+                if (clonedBoard.playerIsInCheck(clonedOpponentPlayer, clonedControlledPlayer)) {
+                    System.out.println("Cannot move " + clonedPiece + " at " + startingPosition[0] + ", " + startingPosition[1] + " to " + endingPosition[0] + ", " + endingPosition[1]);
                     continue;
                 }
                 

@@ -175,4 +175,6 @@ public class pawn extends piece {
 
     public boolean canBeTakenByEnPassant() {return isEnPassantValid;}
     public void setAllowEnPassant(boolean allowEnPassant) {isEnPassantValid = allowEnPassant;}
+
+    public String toString() {return "pawn";}
 }
