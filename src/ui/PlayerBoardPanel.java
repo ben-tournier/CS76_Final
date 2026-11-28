@@ -246,6 +246,7 @@ public class PlayerBoardPanel extends JPanel {
                     currentGame.performCastle(pieceMoving, newPosition);
                     clearSelection();
                 }
+                return;
             }
 
             clearSelection();

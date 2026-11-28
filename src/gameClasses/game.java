@@ -104,33 +104,34 @@ public class game {
         endTurn(movingPlayer, waitingPlayer);
     }
 
-    public void performCastle(piece piecemoving, int[] newPosition) {
+    public void performCastle(piece kingMoving, int[] newPosition) {
         if (gameIsOver) {
             return;
         }
 
         player movingPlayer = currentPlayer;
         player waitingPlayer = getOpponent(movingPlayer);
+        piece pieceCastling;
 
         int kingRow = newPosition[0];
         int newKingCol = newPosition[1];
+        int newOtherCol;
 
-        gameBoard.movePiece(waitingPlayer, piecemoving, newPosition);
+        System.out.println("King moved to " + kingRow  + ", " + newKingCol);
+        gameBoard.movePiece(waitingPlayer, kingMoving, newPosition);
 
         if (newKingCol - 1 < gameBoard.getBoardSize() - newKingCol) {
-            piece pieceCastline = gameBoard.getPiece(kingRow, 1);
-            int newOtherCol = newKingCol + 1;
-
-            gameBoard.movePiece(waitingPlayer, pieceCastline, kingRow, newOtherCol);
+            pieceCastling = gameBoard.getPiece(kingRow, 1);
+            newOtherCol = newKingCol + 1;
         }
 
         else {
-            piece pieceCastline = gameBoard.getPiece(kingRow, gameBoard.getBoardSize());
-            int newOtherCol = newKingCol - 1;
-
-            gameBoard.movePiece(waitingPlayer, pieceCastline, kingRow, newOtherCol);
-
+            pieceCastling = gameBoard.getPiece(kingRow, gameBoard.getBoardSize());
+            newOtherCol = newKingCol - 1;
         }
+
+        System.out.println(pieceCastling + " moved to " + kingRow + ", " + newOtherCol);
+        gameBoard.movePiece(waitingPlayer, pieceCastling, kingRow, newOtherCol);
 
         statusMessage = getColorName(movingPlayer) + " castled to " + getSquareName(newPosition);
 
